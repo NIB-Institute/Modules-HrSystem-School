@@ -2,7 +2,6 @@
 
 namespace Modules\School\Providers;
 
-use App\Services\MenuService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -28,107 +27,8 @@ class SchoolServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
-        $this->registerMenuItems();
-    }
-
-    /**
-     * Register menu items for the School module.
-     */
-    protected function registerMenuItems(): void
-    {
-        $this->app->booted(function () {
-            try {
-                MenuService::addMenuItem(
-                    menu: 'primary',
-                    id: 'school',
-                    title: __('Schools'),
-                    url: route('school.schools.index'),
-                    icon: 'GraduationCap',
-                    order: 40,
-                    permissions: 'schools.view_any',
-                    route: 'school.*'
-                );
-
-                MenuService::addSubmenuItem(
-                    'primary',
-                    'school',
-                    __('All Schools'),
-                    route('school.schools.index'),
-                    10,
-                    'schools.view_any',
-                    'school.schools.*',
-                    'Building2'
-                );
-
-                // Only add submenu items if routes exist
-                if (\Route::has('school.departments.index')) {
-                    MenuService::addSubmenuItem(
-                        'primary',
-                        'school',
-                        __('Departments'),
-                        route('school.departments.index'),
-                        20,
-                        'departments.view_any',
-                        'school.departments.*',
-                        'Layers'
-                    );
-                }
-
-                if (\Route::has('school.programs.index')) {
-                    MenuService::addSubmenuItem(
-                        'primary',
-                        'school',
-                        __('Programs'),
-                        route('school.programs.index'),
-                        30,
-                        'programs.view_any',
-                        'school.programs.*',
-                        'BookOpen'
-                    );
-                }
-
-                if (\Route::has('school.courses.index')) {
-                    MenuService::addSubmenuItem(
-                        'primary',
-                        'school',
-                        __('Courses'),
-                        route('school.courses.index'),
-                        40,
-                        'courses.view_any',
-                        'school.courses.*',
-                        'FileText'
-                    );
-                }
-
-                if (\Route::has('school.classrooms.index')) {
-                    MenuService::addSubmenuItem(
-                        'primary',
-                        'school',
-                        __('Classrooms'),
-                        route('school.classrooms.index'),
-                        50,
-                        'classrooms.view_any',
-                        'school.classrooms.*',
-                        'DoorOpen'
-                    );
-                }
-
-                if (\Route::has('school.equipment.index')) {
-                    MenuService::addSubmenuItem(
-                        'primary',
-                        'school',
-                        __('Equipment'),
-                        route('school.equipment.index'),
-                        60,
-                        'equipment.view_any',
-                        'school.equipment.*',
-                        'Wrench'
-                    );
-                }
-            } catch (\Exception $e) {
-                // Silently handle menu registration errors
-            }
-        });
+        // Sidebar menu is now registered per-request by
+        // Modules\School\Http\Middleware\DashboardMiddlewareHandle.
     }
 
     /**
