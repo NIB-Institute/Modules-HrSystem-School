@@ -14,6 +14,7 @@ use Modules\School\Http\Controllers\Dashboard\V1\ClassroomTrashController;
 use Modules\School\Http\Controllers\Dashboard\V1\CourseTrashController;
 use Modules\School\Http\Controllers\Dashboard\V1\ProgramTrashController;
 use Modules\School\Http\Controllers\Dashboard\V1\EquipmentTrashController;
+use Modules\School\Http\Controllers\Dashboard\V1\InventoryTrashController;
 use Modules\School\Http\Controllers\Dashboard\V1\SchoolTrashController;
 
 /*
@@ -70,9 +71,13 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::get('programs/template', [SchoolImportExportController::class, 'downloadProgramsTemplate'])->name('programs.template');
 
     // Equipment Import/Export
-    // Inventories Export
+    // Inventories Import/Export
     Route::get('inventories/export-options', [SchoolImportExportController::class, 'exportInventoriesOptions'])->name('inventories.export-options');
     Route::get('inventories/export', [SchoolImportExportController::class, 'exportInventories'])->name('inventories.export');
+    Route::get('inventories/import', [SchoolImportExportController::class, 'showImportInventories'])->name('inventories.import');
+    Route::post('inventories/import', [SchoolImportExportController::class, 'importInventories'])->name('inventories.import.store');
+    Route::post('inventories/import/preview', [SchoolImportExportController::class, 'previewInventories'])->name('inventories.import.preview');
+    Route::get('inventories/template', [SchoolImportExportController::class, 'downloadInventoriesTemplate'])->name('inventories.template');
 
     Route::get('equipment/export-options', [SchoolImportExportController::class, 'exportEquipmentOptions'])->name('equipment.export-options');
     Route::get('equipment/export', [SchoolImportExportController::class, 'exportEquipment'])->name('equipment.export');
@@ -122,6 +127,14 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::delete('equipment/trash/empty', [EquipmentTrashController::class, 'empty'])->name('equipment.trash.empty');
     Route::put('equipment/trash/bulk-restore', [EquipmentTrashController::class, 'bulkRestore'])->name('equipment.trash.bulk-restore');
     Route::delete('equipment/trash/bulk-force-delete', [EquipmentTrashController::class, 'bulkForceDelete'])->name('equipment.trash.bulk-force-delete');
+
+    // Inventories Trash
+    Route::get('inventories/trash', [InventoryTrashController::class, 'index'])->name('inventories.trash.index');
+    Route::put('inventories/{uuid}/restore', [InventoryTrashController::class, 'restore'])->name('inventories.trash.restore');
+    Route::delete('inventories/{uuid}/force-delete', [InventoryTrashController::class, 'forceDelete'])->name('inventories.trash.force-delete');
+    Route::delete('inventories/trash/empty', [InventoryTrashController::class, 'empty'])->name('inventories.trash.empty');
+    Route::put('inventories/trash/bulk-restore', [InventoryTrashController::class, 'bulkRestore'])->name('inventories.trash.bulk-restore');
+    Route::delete('inventories/trash/bulk-force-delete', [InventoryTrashController::class, 'bulkForceDelete'])->name('inventories.trash.bulk-force-delete');
 
     // Schools Trash
     Route::get('schools/trash', [SchoolTrashController::class, 'index'])->name('schools.trash.index');

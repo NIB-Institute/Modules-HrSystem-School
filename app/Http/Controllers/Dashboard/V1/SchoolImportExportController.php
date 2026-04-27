@@ -23,6 +23,7 @@ use Modules\School\Imports\ClassroomsImport;
 use Modules\School\Imports\CoursesImport;
 use Modules\School\Imports\ProgramsImport;
 use Modules\School\Imports\EquipmentImport;
+use Modules\School\Imports\InventoriesImport;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
@@ -249,6 +250,53 @@ class SchoolImportExportController extends Controller
     public function exportInventories(ExportRequest $request): BinaryFileResponse
     {
         return ResourceExporter::download(InventoriesExport::class, $request);
+    }
+
+    public function showImportInventories(): Response
+    {
+        return Inertia::render('school::Dashboard/V1/Inventory/Import', [
+            'duplicateOptions' => $this->duplicateOptions,
+        ]);
+    }
+
+    public function previewInventories(Request $request): JsonResponse
+    {
+        return $this->handlePreview($request, InventoriesImport::class);
+    }
+
+    public function importInventories(Request $request): RedirectResponse
+    {
+        return $this->handleImport(
+            $request,
+            InventoriesImport::class,
+            'school.inventories.index',
+            'school.inventories.import',
+        );
+    }
+
+    public function downloadInventoriesTemplate(): BinaryFileResponse
+    {
+        $headers = [
+            'Asset Tag', 'Serial Number', 'Name', 'Equipment', 'Classroom',
+            'Department', 'Status', 'Condition', 'Cost', 'Vendor',
+            'Purchased At', 'Warranty Until', 'Notes', 'Is Active',
+        ];
+        $sampleData = [
+            'PRJ-001', 'A1B2C3', 'Main hall projector', 'Test Projector',
+            'Room 101', 'Computer Science', 'in_use', 'good',
+            '500.00', 'Acme Supplies', '2024-01-15', '2027-01-15',
+            'Mounted on ceiling', 'yes',
+        ];
+        $instructions = [
+            'Asset Tag and Equipment are required. Equipment must match an existing equipment name exactly (case-sensitive).',
+            'Status: in_stock | in_use | maintenance | retired | lost | disposed (defaults to in_stock).',
+            'Condition: new | good | fair | poor (defaults to good).',
+            'Classroom and Department are optional and matched by name.',
+            'Dates: YYYY-MM-DD.',
+            'Is Active: yes/no (defaults to yes).',
+        ];
+
+        return $this->generateTemplate('inventories', $headers, $sampleData, $instructions);
     }
 
     // ==================== EQUIPMENT ====================

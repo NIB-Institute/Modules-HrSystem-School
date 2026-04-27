@@ -16,8 +16,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import {
     Plus, Package, Search, Eye, Pencil, Trash2,
-    Download, FileSpreadsheet, CheckCircle, AlertTriangle,
-    Wrench, Ban,
+    Download, Upload, FileSpreadsheet, CheckCircle, AlertTriangle,
+    Wrench, Ban, Database,
 } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { InventoryIndexProps, Inventory, InventoryStatus } from '@school/types';
@@ -128,6 +128,8 @@ watch([statusFilter, conditionFilter, equipmentFilter], () => {
 const handleCreate = () => router.visit('/dashboard/inventories/create');
 const handleExport = () => router.visit('/dashboard/inventories/export-options');
 const handleDownloadTemplate = () => router.visit('/dashboard/inventories/export-options');
+const handleImport = () => router.visit('/dashboard/inventories/import');
+const handleTrash = () => router.visit('/dashboard/inventories/trash');
 
 const statusOptions = computed(() =>
     Object.entries(props.statuses).map(([value, label]) => ({ value, label })),
@@ -162,8 +164,21 @@ const conditionOptions = computed(() =>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
+                            <Button variant="default">
+                                <Database class="mr-2 h-4 w-4" />
+                                All
+                            </Button>
+                            <Button variant="outline" @click="handleTrash">
+                                <Trash2 class="mr-2 h-4 w-4" />
+                                Trash
+                            </Button>
+                        </ButtonGroup>
+                        <ButtonGroup>
                             <Button variant="outline" @click="handleExport">
                                 <Download class="mr-2 h-4 w-4" /> Export
+                            </Button>
+                            <Button variant="outline" @click="handleImport">
+                                <Upload class="mr-2 h-4 w-4" /> Import
                             </Button>
                             <Button variant="outline" @click="handleDownloadTemplate">
                                 <FileSpreadsheet class="mr-2 h-4 w-4" /> Template
