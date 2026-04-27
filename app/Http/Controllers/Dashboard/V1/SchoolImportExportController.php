@@ -2,13 +2,16 @@
 
 namespace Modules\School\Http\Controllers\Dashboard\V1;
 
+use App\Concerns\Exports\ResourceExporter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ExportRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use Momentum\Modal\Modal;
 use Modules\School\Exports\DepartmentsExport;
 use Modules\School\Exports\ClassroomsExport;
 use Modules\School\Exports\CoursesExport;
@@ -35,11 +38,19 @@ class SchoolImportExportController extends Controller
 
     // ==================== DEPARTMENTS ====================
 
-    public function exportDepartments(Request $request): BinaryFileResponse
+    public function exportDepartmentsOptions(): Modal
     {
-        $filters = $request->only(['search', 'status', 'school_id']);
-        $filename = 'departments_' . now()->format('Y-m-d_His') . '.xlsx';
-        return Excel::download(new DepartmentsExport($filters), $filename);
+        return ResourceExporter::optionsModal(
+            DepartmentsExport::class,
+            'school.departments.export',
+            'school.departments.index',
+            __('Export Departments'),
+        );
+    }
+
+    public function exportDepartments(ExportRequest $request): BinaryFileResponse
+    {
+        return ResourceExporter::download(DepartmentsExport::class, $request);
     }
 
     public function showImportDepartments(): Response
@@ -76,11 +87,19 @@ class SchoolImportExportController extends Controller
 
     // ==================== CLASSROOMS ====================
 
-    public function exportClassrooms(Request $request): BinaryFileResponse
+    public function exportClassroomsOptions(): Modal
     {
-        $filters = $request->only(['search', 'status', 'department_id', 'type']);
-        $filename = 'classrooms_' . now()->format('Y-m-d_His') . '.xlsx';
-        return Excel::download(new ClassroomsExport($filters), $filename);
+        return ResourceExporter::optionsModal(
+            ClassroomsExport::class,
+            'school.classrooms.export',
+            'school.classrooms.index',
+            __('Export Classrooms'),
+        );
+    }
+
+    public function exportClassrooms(ExportRequest $request): BinaryFileResponse
+    {
+        return ResourceExporter::download(ClassroomsExport::class, $request);
     }
 
     public function showImportClassrooms(): Response
@@ -116,11 +135,19 @@ class SchoolImportExportController extends Controller
 
     // ==================== COURSES ====================
 
-    public function exportCourses(Request $request): BinaryFileResponse
+    public function exportCoursesOptions(): Modal
     {
-        $filters = $request->only(['search', 'status', 'department_id', 'program_id', 'type']);
-        $filename = 'courses_' . now()->format('Y-m-d_His') . '.xlsx';
-        return Excel::download(new CoursesExport($filters), $filename);
+        return ResourceExporter::optionsModal(
+            CoursesExport::class,
+            'school.courses.export',
+            'school.courses.index',
+            __('Export Courses'),
+        );
+    }
+
+    public function exportCourses(ExportRequest $request): BinaryFileResponse
+    {
+        return ResourceExporter::download(CoursesExport::class, $request);
     }
 
     public function showImportCourses(): Response
@@ -158,11 +185,19 @@ class SchoolImportExportController extends Controller
 
     // ==================== PROGRAMS ====================
 
-    public function exportPrograms(Request $request): BinaryFileResponse
+    public function exportProgramsOptions(): Modal
     {
-        $filters = $request->only(['search', 'status', 'school_id', 'department_id', 'degree_level']);
-        $filename = 'programs_' . now()->format('Y-m-d_His') . '.xlsx';
-        return Excel::download(new ProgramsExport($filters), $filename);
+        return ResourceExporter::optionsModal(
+            ProgramsExport::class,
+            'school.programs.export',
+            'school.programs.index',
+            __('Export Programs'),
+        );
+    }
+
+    public function exportPrograms(ExportRequest $request): BinaryFileResponse
+    {
+        return ResourceExporter::download(ProgramsExport::class, $request);
     }
 
     public function showImportPrograms(): Response
@@ -200,11 +235,19 @@ class SchoolImportExportController extends Controller
 
     // ==================== EQUIPMENT ====================
 
-    public function exportEquipment(Request $request): BinaryFileResponse
+    public function exportEquipmentOptions(): Modal
     {
-        $filters = $request->only(['search', 'status', 'category']);
-        $filename = 'equipment_' . now()->format('Y-m-d_His') . '.xlsx';
-        return Excel::download(new EquipmentExport($filters), $filename);
+        return ResourceExporter::optionsModal(
+            EquipmentExport::class,
+            'school.equipment.export',
+            'school.equipment.index',
+            __('Export Equipment'),
+        );
+    }
+
+    public function exportEquipment(ExportRequest $request): BinaryFileResponse
+    {
+        return ResourceExporter::download(EquipmentExport::class, $request);
     }
 
     public function showImportEquipment(): Response

@@ -137,15 +137,10 @@ const handleCreate = () => {
     router.visit('/dashboard/classrooms/create');
 };
 
+// Open the column-selectable export/template modal (shared
+// /resources/js/pages/shared/ResourceExportPage.vue).
 const handleExport = () => {
-    const filterParams = getFilterParams();
-    const params = new URLSearchParams();
-    Object.entries(filterParams).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-            params.append(key, String(value));
-        }
-    });
-    window.location.href = `/dashboard/classrooms/export?${params.toString()}`;
+    router.visit('/dashboard/classrooms/export-options');
 };
 
 const handleImport = () => {
@@ -153,7 +148,7 @@ const handleImport = () => {
 };
 
 const handleDownloadTemplate = () => {
-    window.location.href = '/dashboard/classrooms/template';
+    router.visit('/dashboard/classrooms/export-options');
 };
 
 const handleTrash = () => {

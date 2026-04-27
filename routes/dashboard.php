@@ -37,6 +37,7 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     // ==================== IMPORT/EXPORT ROUTES (before parameterized routes) ====================
 
     // Departments Import/Export
+    Route::get('departments/export-options', [SchoolImportExportController::class, 'exportDepartmentsOptions'])->name('departments.export-options');
     Route::get('departments/export', [SchoolImportExportController::class, 'exportDepartments'])->name('departments.export');
     Route::get('departments/import', [SchoolImportExportController::class, 'showImportDepartments'])->name('departments.import');
     Route::post('departments/import', [SchoolImportExportController::class, 'importDepartments'])->name('departments.import.store');
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::get('departments/template', [SchoolImportExportController::class, 'downloadDepartmentsTemplate'])->name('departments.template');
 
     // Classrooms Import/Export
+    Route::get('classrooms/export-options', [SchoolImportExportController::class, 'exportClassroomsOptions'])->name('classrooms.export-options');
     Route::get('classrooms/export', [SchoolImportExportController::class, 'exportClassrooms'])->name('classrooms.export');
     Route::get('classrooms/import', [SchoolImportExportController::class, 'showImportClassrooms'])->name('classrooms.import');
     Route::post('classrooms/import', [SchoolImportExportController::class, 'importClassrooms'])->name('classrooms.import.store');
@@ -51,6 +53,7 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::get('classrooms/template', [SchoolImportExportController::class, 'downloadClassroomsTemplate'])->name('classrooms.template');
 
     // Courses Import/Export
+    Route::get('courses/export-options', [SchoolImportExportController::class, 'exportCoursesOptions'])->name('courses.export-options');
     Route::get('courses/export', [SchoolImportExportController::class, 'exportCourses'])->name('courses.export');
     Route::get('courses/import', [SchoolImportExportController::class, 'showImportCourses'])->name('courses.import');
     Route::post('courses/import', [SchoolImportExportController::class, 'importCourses'])->name('courses.import.store');
@@ -58,6 +61,7 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::get('courses/template', [SchoolImportExportController::class, 'downloadCoursesTemplate'])->name('courses.template');
 
     // Programs Import/Export
+    Route::get('programs/export-options', [SchoolImportExportController::class, 'exportProgramsOptions'])->name('programs.export-options');
     Route::get('programs/export', [SchoolImportExportController::class, 'exportPrograms'])->name('programs.export');
     Route::get('programs/import', [SchoolImportExportController::class, 'showImportPrograms'])->name('programs.import');
     Route::post('programs/import', [SchoolImportExportController::class, 'importPrograms'])->name('programs.import.store');
@@ -65,6 +69,7 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::get('programs/template', [SchoolImportExportController::class, 'downloadProgramsTemplate'])->name('programs.template');
 
     // Equipment Import/Export
+    Route::get('equipment/export-options', [SchoolImportExportController::class, 'exportEquipmentOptions'])->name('equipment.export-options');
     Route::get('equipment/export', [SchoolImportExportController::class, 'exportEquipment'])->name('equipment.export');
     Route::get('equipment/import', [SchoolImportExportController::class, 'showImportEquipment'])->name('equipment.import');
     Route::post('equipment/import', [SchoolImportExportController::class, 'importEquipment'])->name('equipment.import.store');
