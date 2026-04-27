@@ -94,6 +94,17 @@ class DashboardMiddlewareHandle
             'Wrench',
         );
 
+        MenuService::addSubmenuItem(
+            'primary',
+            'school',
+            __('Inventory'),
+            route('school.inventories.index'),
+            70,
+            PermissionEnum::INVENTORIES_VIEW_ANY->value,
+            'school.inventories.*',
+            'Package',
+        );
+
         return $next($request);
     }
 }

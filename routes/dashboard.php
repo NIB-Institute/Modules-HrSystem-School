@@ -5,6 +5,7 @@ use Modules\School\Http\Controllers\Dashboard\V1\ClassroomController;
 use Modules\School\Http\Controllers\Dashboard\V1\CourseController;
 use Modules\School\Http\Controllers\Dashboard\V1\DepartmentController;
 use Modules\School\Http\Controllers\Dashboard\V1\EquipmentController;
+use Modules\School\Http\Controllers\Dashboard\V1\InventoryController;
 use Modules\School\Http\Controllers\Dashboard\V1\ProgramController;
 use Modules\School\Http\Controllers\Dashboard\V1\SchoolController;
 use Modules\School\Http\Controllers\Dashboard\V1\SchoolImportExportController;
@@ -69,6 +70,10 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::get('programs/template', [SchoolImportExportController::class, 'downloadProgramsTemplate'])->name('programs.template');
 
     // Equipment Import/Export
+    // Inventories Export
+    Route::get('inventories/export-options', [SchoolImportExportController::class, 'exportInventoriesOptions'])->name('inventories.export-options');
+    Route::get('inventories/export', [SchoolImportExportController::class, 'exportInventories'])->name('inventories.export');
+
     Route::get('equipment/export-options', [SchoolImportExportController::class, 'exportEquipmentOptions'])->name('equipment.export-options');
     Route::get('equipment/export', [SchoolImportExportController::class, 'exportEquipment'])->name('equipment.export');
     Route::get('equipment/import', [SchoolImportExportController::class, 'showImportEquipment'])->name('equipment.import');
@@ -199,6 +204,19 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     Route::put('classrooms/{classroom}/toggle-status', [ClassroomController::class, 'toggleStatus'])->name('classrooms.toggle-status');
     Route::get('classrooms/{classroom}/delete', [ClassroomController::class, 'confirmDelete'])->name('classrooms.delete');
     Route::delete('classrooms/{classroom}', [ClassroomController::class, 'destroy'])->name('classrooms.destroy');
+
+    // Inventories
+    Route::get('inventories/bulk-delete', [InventoryController::class, 'confirmBulkDelete'])->name('inventories.bulk-delete.confirm');
+    Route::delete('inventories/bulk-delete', [InventoryController::class, 'bulkDelete'])->name('inventories.bulk-delete');
+    Route::get('inventories/create', [InventoryController::class, 'create'])->name('inventories.create');
+    Route::post('inventories', [InventoryController::class, 'store'])->name('inventories.store');
+    Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');
+    Route::get('inventories/{inventory}', [InventoryController::class, 'show'])->name('inventories.show');
+    Route::get('inventories/{inventory}/edit', [InventoryController::class, 'edit'])->name('inventories.edit');
+    Route::put('inventories/{inventory}', [InventoryController::class, 'update'])->name('inventories.update');
+    Route::patch('inventories/{inventory}', [InventoryController::class, 'update']);
+    Route::get('inventories/{inventory}/delete', [InventoryController::class, 'confirmDelete'])->name('inventories.delete');
+    Route::delete('inventories/{inventory}', [InventoryController::class, 'destroy'])->name('inventories.destroy');
 
     // Equipment
     Route::get('equipment/bulk-delete', [EquipmentController::class, 'confirmBulkDelete'])->name('equipment.bulk-delete.confirm');

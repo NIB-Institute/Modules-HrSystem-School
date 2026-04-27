@@ -17,6 +17,7 @@ use Modules\School\Exports\ClassroomsExport;
 use Modules\School\Exports\CoursesExport;
 use Modules\School\Exports\ProgramsExport;
 use Modules\School\Exports\EquipmentExport;
+use Modules\School\Exports\InventoriesExport;
 use Modules\School\Imports\DepartmentsImport;
 use Modules\School\Imports\ClassroomsImport;
 use Modules\School\Imports\CoursesImport;
@@ -231,6 +232,23 @@ class SchoolImportExportController extends Controller
             'Status: active or inactive (defaults to active)',
         ];
         return $this->generateTemplate('programs', $headers, $sampleData, $instructions);
+    }
+
+    // ==================== INVENTORIES ====================
+
+    public function exportInventoriesOptions(): Modal
+    {
+        return ResourceExporter::optionsModal(
+            InventoriesExport::class,
+            'school.inventories.export',
+            'school.inventories.index',
+            __('Export Inventory'),
+        );
+    }
+
+    public function exportInventories(ExportRequest $request): BinaryFileResponse
+    {
+        return ResourceExporter::download(InventoriesExport::class, $request);
     }
 
     // ==================== EQUIPMENT ====================

@@ -695,3 +695,113 @@ export interface EquipmentEditProps {
 export interface EquipmentDeleteProps {
     equipment: Equipment;
 }
+
+// =================== Inventory ===================
+
+export type InventoryStatus =
+    | 'in_stock'
+    | 'in_use'
+    | 'maintenance'
+    | 'retired'
+    | 'lost'
+    | 'disposed';
+
+export type InventoryCondition = 'new' | 'good' | 'fair' | 'poor';
+
+export interface Inventory {
+    id: number;
+    uuid: string;
+    asset_tag: string;
+    serial_number: string | null;
+    name: string | null;
+    status: InventoryStatus;
+    status_label: string;
+    condition: InventoryCondition;
+    condition_label: string;
+    cost: string | number | null;
+    vendor: string | null;
+    purchased_at: string | null;
+    warranty_until: string | null;
+    warranty_expired: boolean;
+    notes: string | null;
+    is_active: boolean;
+    equipment_id: number;
+    classroom_id: number | null;
+    department_id: number | null;
+    assigned_to_user_id: number | null;
+    equipment?: { id: number; name: string };
+    classroom?: { id: number; name: string } | null;
+    department?: { id: number; name: string } | null;
+    assigned_to?: { id: number; name: string; email: string } | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface InventoryStats {
+    total: number;
+    in_stock: number;
+    in_use: number;
+    maintenance: number;
+    retired: number;
+    lost: number;
+}
+
+export interface InventoryFilters {
+    search?: string;
+    status?: string;
+    condition?: string;
+    equipment_id?: string | number;
+    classroom_id?: string | number;
+    department_id?: string | number;
+}
+
+export interface InventoryIndexProps {
+    inventories: PaginatedResponse<Inventory>;
+    filters: InventoryFilters;
+    stats: InventoryStats;
+    statuses: Record<InventoryStatus, string>;
+    conditions: Record<InventoryCondition, string>;
+    equipment: { id: number; name: string }[];
+    classrooms: { id: number; name: string }[];
+    departments: { id: number; name: string }[];
+}
+
+export interface InventoryFormData {
+    asset_tag: string;
+    serial_number: string;
+    name: string;
+    equipment_id: number | null;
+    classroom_id: number | null;
+    department_id: number | null;
+    assigned_to_user_id: number | null;
+    status: InventoryStatus;
+    condition: InventoryCondition;
+    purchased_at: string;
+    cost: number | null;
+    vendor: string;
+    warranty_until: string;
+    notes: string;
+    is_active: boolean;
+}
+
+export interface InventoryFormReferenceData {
+    statuses: Record<InventoryStatus, string>;
+    conditions: Record<InventoryCondition, string>;
+    equipment: { id: number; name: string }[];
+    classrooms: { id: number; name: string }[];
+    departments: { id: number; name: string }[];
+}
+
+export interface InventoryCreateProps extends InventoryFormReferenceData {}
+
+export interface InventoryEditProps extends InventoryFormReferenceData {
+    inventory: Inventory;
+}
+
+export interface InventoryShowProps {
+    inventory: Inventory;
+}
+
+export interface InventoryDeleteProps {
+    inventory: Inventory;
+}

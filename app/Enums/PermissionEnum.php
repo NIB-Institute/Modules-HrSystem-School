@@ -87,6 +87,23 @@ enum PermissionEnum: string
     case PROGRAMS_ASSIGN_COURSES = 'programs.assign_courses';
     case PROGRAMS_VIEW_STATISTICS = 'programs.view_statistics';
 
+    // ----- inventories -----
+    case INVENTORIES_VIEW = 'inventories.view';
+    case INVENTORIES_VIEW_ANY = 'inventories.view_any';
+    case INVENTORIES_CREATE = 'inventories.create';
+    case INVENTORIES_UPDATE = 'inventories.update';
+    case INVENTORIES_DELETE = 'inventories.delete';
+    case INVENTORIES_RESTORE = 'inventories.restore';
+    case INVENTORIES_FORCE_DELETE = 'inventories.force_delete';
+    case INVENTORIES_EXPORT = 'inventories.export';
+    case INVENTORIES_IMPORT = 'inventories.import';
+    case INVENTORIES_BULK_DELETE = 'inventories.bulk_delete';
+    case INVENTORIES_TOGGLE_STATUS = 'inventories.toggle_status';
+    case INVENTORIES_ASSIGN_LOCATION = 'inventories.assign_location';
+    case INVENTORIES_ASSIGN_USER = 'inventories.assign_user';
+    case INVENTORIES_TRANSFER = 'inventories.transfer';
+    case INVENTORIES_VIEW_HISTORY = 'inventories.view_history';
+
     // ----- equipment -----
     case EQUIPMENT_VIEW = 'equipment.view';
     case EQUIPMENT_VIEW_ANY = 'equipment.view_any';
