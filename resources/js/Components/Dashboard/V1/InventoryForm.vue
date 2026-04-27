@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from '@/components/shared';
 import {
     Select,
     SelectContent,
@@ -36,16 +37,20 @@ const isActive = computed({
     set: (val: boolean) => { model.value.is_active = val; },
 });
 
+// reka-ui's <SelectItem> forbids `value=""` (reserved for "clear").
+// Use this sentinel for nullable selects (classroom, department).
+const NONE = '__none__';
+
 const setSelect = <K extends keyof InventoryFormData>(key: K) =>
     (value: string | number | boolean | bigint | Record<string, unknown> | null | undefined) => {
-        if (value === null || value === undefined || value === '') {
+        if (value === null || value === undefined || value === '' || value === NONE) {
             (model.value as InventoryFormData)[key] = null as InventoryFormData[K];
-        } else {
-            // numeric ids vs string status/condition
-            (model.value as InventoryFormData)[key] = (
-                typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value
-            ) as InventoryFormData[K];
+            return;
         }
+        // numeric ids vs string status/condition
+        (model.value as InventoryFormData)[key] = (
+            typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value
+        ) as InventoryFormData[K];
     };
 </script>
 
@@ -134,12 +139,12 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
             <div class="space-y-2">
                 <Label>Classroom</Label>
                 <Select
-                    :model-value="model.classroom_id ? String(model.classroom_id) : ''"
+                    :model-value="model.classroom_id ? String(model.classroom_id) : NONE"
                     @update:model-value="setSelect('classroom_id')"
                 >
                     <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem :value="NONE">None</SelectItem>
                         <SelectItem v-for="c in classrooms" :key="c.id" :value="String(c.id)">
                             {{ c.name }}
                         </SelectItem>
@@ -150,12 +155,12 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
             <div class="space-y-2">
                 <Label>Department</Label>
                 <Select
-                    :model-value="model.department_id ? String(model.department_id) : ''"
+                    :model-value="model.department_id ? String(model.department_id) : NONE"
                     @update:model-value="setSelect('department_id')"
                 >
                     <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem :value="NONE">None</SelectItem>
                         <SelectItem v-for="d in departments" :key="d.id" :value="String(d.id)">
                             {{ d.name }}
                         </SelectItem>
@@ -207,5 +212,14 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
             <Label for="notes">Notes</Label>
             <Textarea id="notes" v-model="model.notes" placeholder="Optional internal notes..." rows="3" />
         </div>
+
+        <!-- Images (photos / receipts / docs) -->
+        <ImageUpload
+            v-model="model.images"
+            label="Photos & Documents"
+            :max-files="10"
+            :max-size="5"
+            :error="model.errors['images'] as string | undefined"
+        />
     </div>
 </template>

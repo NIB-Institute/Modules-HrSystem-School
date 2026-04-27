@@ -724,6 +724,7 @@ export interface Inventory {
     warranty_until: string | null;
     warranty_expired: boolean;
     notes: string | null;
+    images: string[];
     is_active: boolean;
     equipment_id: number;
     classroom_id: number | null;
@@ -781,6 +782,7 @@ export interface InventoryFormData {
     vendor: string;
     warranty_until: string;
     notes: string;
+    images: string[];
     is_active: boolean;
 }
 

@@ -52,6 +52,7 @@ class Inventory extends Model
         'vendor',
         'warranty_until',
         'notes',
+        'images',
         'is_active',
     ];
 
@@ -59,6 +60,7 @@ class Inventory extends Model
         'purchased_at' => 'date',
         'warranty_until' => 'date',
         'cost' => 'decimal:2',
+        'images' => 'array',
         'is_active' => 'boolean',
     ];
 

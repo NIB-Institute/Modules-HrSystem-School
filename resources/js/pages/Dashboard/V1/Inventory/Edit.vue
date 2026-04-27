@@ -38,6 +38,7 @@ const form = useForm<InventoryFormData>({
     vendor: props.inventory.vendor ?? '',
     warranty_until: props.inventory.warranty_until ?? '',
     notes: props.inventory.notes ?? '',
+    images: props.inventory.images ?? [],
     is_active: props.inventory.is_active,
 });
 

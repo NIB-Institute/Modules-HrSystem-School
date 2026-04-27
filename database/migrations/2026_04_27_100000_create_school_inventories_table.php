@@ -50,6 +50,9 @@ return new class extends Migration
 
             $table->text('notes')->nullable();
 
+            // Photos / receipts / docs (URLs returned by the MediaLibrary).
+            $table->json('images')->nullable();
+
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();

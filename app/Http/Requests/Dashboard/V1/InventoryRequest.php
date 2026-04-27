@@ -37,6 +37,8 @@ class InventoryRequest extends FormRequest
             'vendor' => ['nullable', 'string', 'max:150'],
             'warranty_until' => ['nullable', 'date', 'after_or_equal:purchased_at'],
             'notes' => ['nullable', 'string'],
+            'images' => ['nullable', 'array', 'max:10'],
+            'images.*' => ['string', 'max:1024'],
             'is_active' => ['boolean'],
         ];
     }

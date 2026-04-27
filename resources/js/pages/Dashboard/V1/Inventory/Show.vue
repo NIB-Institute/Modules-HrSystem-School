@@ -95,6 +95,26 @@ const handleDelete = () => router.visit(`/dashboard/inventories/${props.inventor
                         {{ inventory.notes }}
                     </CardContent>
                 </Card>
+
+                <Card v-if="inventory.images && inventory.images.length > 0" class="md:col-span-2">
+                    <CardHeader>
+                        <CardTitle>Photos & Documents ({{ inventory.images.length }})</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                            <a
+                                v-for="(url, i) in inventory.images"
+                                :key="i"
+                                :href="url"
+                                target="_blank"
+                                rel="noopener"
+                                class="block aspect-square overflow-hidden rounded-md border bg-muted hover:opacity-90"
+                            >
+                                <img :src="url" :alt="`Image ${i + 1}`" class="h-full w-full object-cover" />
+                            </a>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     </AppLayout>

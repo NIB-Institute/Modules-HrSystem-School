@@ -36,6 +36,7 @@ const form = useForm<InventoryFormData>({
     vendor: '',
     warranty_until: '',
     notes: '',
+    images: [],
     is_active: true,
 });
 

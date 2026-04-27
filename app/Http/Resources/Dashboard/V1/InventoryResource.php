@@ -26,6 +26,7 @@ class InventoryResource extends JsonResource
             'warranty_until' => $this->warranty_until?->toDateString(),
             'warranty_expired' => $this->isExpiredWarranty(),
             'notes' => $this->notes,
+            'images' => $this->images ?? [],
             'is_active' => $this->is_active,
 
             'equipment_id' => $this->equipment_id,
