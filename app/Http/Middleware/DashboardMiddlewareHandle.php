@@ -24,7 +24,7 @@ class DashboardMiddlewareHandle
             url: route('school.schools.index'),
             icon: 'GraduationCap',
             order: 40,
-            permissions: PermissionEnum::VIEW_SCHOOLS->value,
+            permissions: PermissionEnum::SCHOOLS_VIEW_ANY->value,
             route: 'school.*',
         );
 
@@ -34,7 +34,7 @@ class DashboardMiddlewareHandle
             __('All Schools'),
             route('school.schools.index'),
             10,
-            PermissionEnum::VIEW_SCHOOLS->value,
+            PermissionEnum::SCHOOLS_VIEW_ANY->value,
             'school.schools.*',
             'Building2',
         );
@@ -45,7 +45,7 @@ class DashboardMiddlewareHandle
             __('Departments'),
             route('school.departments.index'),
             20,
-            PermissionEnum::VIEW_DEPARTMENTS->value,
+            PermissionEnum::DEPARTMENTS_VIEW_ANY->value,
             'school.departments.*',
             'Layers',
         );
@@ -56,7 +56,7 @@ class DashboardMiddlewareHandle
             __('Programs'),
             route('school.programs.index'),
             30,
-            PermissionEnum::VIEW_PROGRAMS->value,
+            PermissionEnum::PROGRAMS_VIEW_ANY->value,
             'school.programs.*',
             'BookOpen',
         );
@@ -67,7 +67,7 @@ class DashboardMiddlewareHandle
             __('Courses'),
             route('school.courses.index'),
             40,
-            PermissionEnum::VIEW_COURSES->value,
+            PermissionEnum::COURSES_VIEW_ANY->value,
             'school.courses.*',
             'FileText',
         );
@@ -78,7 +78,7 @@ class DashboardMiddlewareHandle
             __('Classrooms'),
             route('school.classrooms.index'),
             50,
-            PermissionEnum::VIEW_CLASSROOMS->value,
+            PermissionEnum::CLASSROOMS_VIEW_ANY->value,
             'school.classrooms.*',
             'DoorOpen',
         );
@@ -89,7 +89,7 @@ class DashboardMiddlewareHandle
             __('Equipment'),
             route('school.equipment.index'),
             60,
-            PermissionEnum::VIEW_EQUIPMENT->value,
+            PermissionEnum::EQUIPMENT_VIEW_ANY->value,
             'school.equipment.*',
             'Wrench',
         );
