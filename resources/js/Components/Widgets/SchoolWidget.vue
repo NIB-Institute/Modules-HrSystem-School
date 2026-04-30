@@ -26,6 +26,9 @@ import {
 } from 'lucide-vue-next';
 import { Link } from '@inertiajs/vue3';
 import type { ChartConfig } from '@/components/ui/chart';
+import { useTranslation } from '@/composables/useTranslation';
+
+const { __ } = useTranslation();
 
 // Types
 export interface SchoolMetrics {
@@ -90,18 +93,18 @@ const emit = defineEmits<{
 const selectedDateRange = ref(props.dateRange);
 
 const dateRangeOptions = [
-    { value: 'today', label: 'Today' },
-    { value: '7d', label: 'Last 7 Days' },
-    { value: '30d', label: 'Last 30 Days' },
-    { value: '90d', label: 'Last 90 Days' },
-    { value: 'year', label: 'This Year' },
+    { value: 'today', label: __('Today') },
+    { value: '7d', label: __('Last 7 Days') },
+    { value: '30d', label: __('Last 30 Days') },
+    { value: '90d', label: __('Last 90 Days') },
+    { value: 'year', label: __('This Year') },
 ];
 
 // Chart configs
 const growthChartConfig: ChartConfig = {
-    schools: { label: 'Schools', color: 'var(--chart-1)' },
-    departments: { label: 'Departments', color: 'var(--chart-2)' },
-    classrooms: { label: 'Classrooms', color: 'var(--chart-3)' },
+    schools: { label: __('Schools'), color: 'var(--chart-1)' },
+    departments: { label: __('Departments'), color: 'var(--chart-2)' },
+    classrooms: { label: __('Classrooms'), color: 'var(--chart-3)' },
 };
 
 // Computed
@@ -148,9 +151,9 @@ const getStatusBadgeVariant = (status: string | boolean): 'default' | 'secondary
 
 const formatStatus = (status: string | boolean): string => {
     if (typeof status === 'boolean') {
-        return status ? 'Active' : 'Inactive';
+        return status ? __('Active') : __('Inactive');
     }
-    return status || 'Unknown';
+    return status || __('Unknown');
 };
 </script>
 
@@ -159,14 +162,14 @@ const formatStatus = (status: string | boolean): string => {
         <!-- Header with Date Filter -->
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-xl font-semibold tracking-tight">School Overview</h2>
-                <p class="text-sm text-muted-foreground">Track schools, departments, and programs</p>
+                <h2 class="text-xl font-semibold tracking-tight">{{ __('School Overview') }}</h2>
+                <p class="text-sm text-muted-foreground">{{ __('Track schools, departments, and programs') }}</p>
             </div>
             <div class="flex items-center gap-2">
                 <Select v-model="selectedDateRange">
                     <SelectTrigger class="w-[160px]">
                         <Calendar class="mr-2 h-4 w-4" />
-                        <SelectValue placeholder="Select period" />
+                        <SelectValue :placeholder="__('Select period')" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem
@@ -188,7 +191,7 @@ const formatStatus = (status: string | boolean): string => {
         <div v-if="showStats" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">Total Schools</CardTitle>
+                    <CardTitle class="text-sm font-medium">{{ __('Total Schools') }}</CardTitle>
                     <GraduationCap class="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -207,58 +210,58 @@ const formatStatus = (status: string | boolean): string => {
 
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">Active Schools</CardTitle>
+                    <CardTitle class="text-sm font-medium">{{ __('Active Schools') }}</CardTitle>
                     <TrendingUp class="h-4 w-4 text-green-500" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold text-green-600">{{ formatNumber(metrics.activeSchools) }}</div>
                     <p class="text-xs text-muted-foreground">
-                        {{ formatNumber(metrics.inactiveSchools) }} inactive
+                        {{ formatNumber(metrics.inactiveSchools) }} {{ __('inactive') }}
                     </p>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">Departments</CardTitle>
+                    <CardTitle class="text-sm font-medium">{{ __('Departments') }}</CardTitle>
                     <Building2 class="h-4 w-4 text-blue-500" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold text-blue-600">{{ formatNumber(metrics.totalDepartments) }}</div>
-                    <p class="text-xs text-muted-foreground">Across all schools</p>
+                    <p class="text-xs text-muted-foreground">{{ __('Across all schools') }}</p>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">Programs</CardTitle>
+                    <CardTitle class="text-sm font-medium">{{ __('Programs') }}</CardTitle>
                     <BookOpen class="h-4 w-4 text-purple-500" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold text-purple-600">{{ formatNumber(metrics.totalPrograms) }}</div>
-                    <p class="text-xs text-muted-foreground">Available programs</p>
+                    <p class="text-xs text-muted-foreground">{{ __('Available programs') }}</p>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">Classrooms</CardTitle>
+                    <CardTitle class="text-sm font-medium">{{ __('Classrooms') }}</CardTitle>
                     <Store class="h-4 w-4 text-amber-500" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold text-amber-600">{{ formatNumber(metrics.totalClassrooms) }}</div>
-                    <p class="text-xs text-muted-foreground">Total classrooms</p>
+                    <p class="text-xs text-muted-foreground">{{ __('Total classrooms') }}</p>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">Inactive</CardTitle>
+                    <CardTitle class="text-sm font-medium">{{ __('Inactive') }}</CardTitle>
                     <GraduationCap class="h-4 w-4 text-gray-400" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold text-gray-600">{{ formatNumber(metrics.inactiveSchools) }}</div>
-                    <p class="text-xs text-muted-foreground">Needs attention</p>
+                    <p class="text-xs text-muted-foreground">{{ __('Needs attention') }}</p>
                 </CardContent>
             </Card>
         </div>
@@ -270,9 +273,9 @@ const formatStatus = (status: string | boolean): string => {
                 <CardHeader>
                     <CardTitle class="flex items-center gap-2">
                         <Building2 class="h-5 w-5" />
-                        Departments by School
+                        {{ __('Departments by School') }}
                     </CardTitle>
-                    <CardDescription>Top schools by department count</CardDescription>
+                    <CardDescription>{{ __('Top schools by department count') }}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div class="space-y-4">
@@ -297,9 +300,9 @@ const formatStatus = (status: string | boolean): string => {
                 <CardHeader>
                     <CardTitle class="flex items-center gap-2">
                         <TrendingUp class="h-5 w-5" />
-                        Growth Trend (Last 6 Months)
+                        {{ __('Growth Trend (Last 6 Months)') }}
                     </CardTitle>
-                    <CardDescription>New additions over time</CardDescription>
+                    <CardDescription>{{ __('New additions over time') }}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ChartContainer :config="growthChartConfig" class="h-[280px]">
@@ -321,15 +324,15 @@ const formatStatus = (status: string | boolean): string => {
                     <div class="flex justify-center gap-4 mt-4">
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 rounded bg-chart-1"></div>
-                            <span class="text-sm">Schools</span>
+                            <span class="text-sm">{{ __('Schools') }}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 rounded bg-chart-2"></div>
-                            <span class="text-sm">Departments</span>
+                            <span class="text-sm">{{ __('Departments') }}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 rounded bg-chart-3"></div>
-                            <span class="text-sm">Classrooms</span>
+                            <span class="text-sm">{{ __('Classrooms') }}</span>
                         </div>
                     </div>
                 </CardContent>
@@ -343,12 +346,12 @@ const formatStatus = (status: string | boolean): string => {
                     <div>
                         <CardTitle class="flex items-center gap-2">
                             <GraduationCap class="h-5 w-5 text-primary" />
-                            Recent Schools
+                            {{ __('Recent Schools') }}
                         </CardTitle>
-                        <CardDescription>Latest schools added to the system</CardDescription>
+                        <CardDescription>{{ __('Latest schools added to the system') }}</CardDescription>
                     </div>
                     <Link href="/dashboard/schools" class="text-sm text-primary hover:underline">
-                        View All
+                        {{ __('View All') }}
                     </Link>
                 </div>
             </CardHeader>
@@ -366,7 +369,7 @@ const formatStatus = (status: string | boolean): string => {
                             <div class="min-w-0">
                                 <p class="font-medium truncate">{{ school.name }}</p>
                                 <p class="text-sm text-muted-foreground">
-                                    {{ school.departments }} departments, {{ school.programs }} programs
+                                    {{ school.departments }} {{ __('departments') }}, {{ school.programs }} {{ __('programs') }}
                                 </p>
                             </div>
                         </div>
