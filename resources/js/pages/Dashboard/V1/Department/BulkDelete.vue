@@ -8,12 +8,14 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AlertTriangle, Building } from 'lucide-vue-next';
 import type { Department } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 interface BulkDeleteProps {
     departments: Department[];
 }
 
 const props = defineProps<BulkDeleteProps>();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -33,25 +35,21 @@ const form = useForm({
     uuids: props.departments.map((d) => d.uuid),
 });
 
-watch(confirmed, () => {
-    form.clearErrors();
-});
+watch(confirmed, () => { form.clearErrors(); });
 
 const canSubmit = computed(() => confirmed.value === true);
 
 const handleSubmit = () => {
     form.delete('/dashboard/departments/bulk-delete', {
         onSuccess: () => {
-            toast.success(`${props.departments.length} department(s) deleted successfully.`);
+            toast.success(__(':count department(s) deleted successfully.', { count: props.departments.length }));
             setTimeout(() => {
                 close();
                 redirect();
             }, 100);
         },
         onError: (errors) => {
-            if (errors.uuids) {
-                toast.error(errors.uuids);
-            }
+            if (errors.uuids) toast.error(errors.uuids);
         },
     });
 };
@@ -65,11 +63,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        :title="`Delete ${departments.length} Department${departments.length > 1 ? 's' : ''}`"
-        description="This action will move the selected departments to trash"
+        :title="__('Delete :count Department(s)', { count: departments.length })"
+        :description="__('This action will move the selected departments to trash')"
         mode="delete"
         size="md"
-        :submit-text="`Delete ${departments.length} Department${departments.length > 1 ? 's' : ''}`"
+        :submit-text="__('Delete :count Department(s)', { count: departments.length })"
         :loading="form.processing"
         :disabled="!canSubmit"
         @submit="handleSubmit"
@@ -79,7 +77,7 @@ const handleCancel = () => {
             <!-- Departments List -->
             <div class="space-y-2">
                 <p class="text-sm font-medium text-muted-foreground">
-                    The following departments will be deleted:
+                    {{ __('The following departments will be deleted:') }}
                 </p>
                 <div class="max-h-48 space-y-2 overflow-y-auto rounded-lg border p-3">
                     <div
@@ -105,10 +103,10 @@ const handleCancel = () => {
                 <AlertTriangle class="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
                 <div class="space-y-1">
                     <p class="text-sm font-medium text-destructive">
-                        You are about to delete {{ departments.length }} department{{ departments.length > 1 ? 's' : '' }}
+                        {{ __('You are about to delete :count department(s)', { count: departments.length }) }}
                     </p>
                     <p class="text-sm text-muted-foreground">
-                        These departments will be moved to trash. They can be restored within 30 days.
+                        {{ __('These departments will be moved to trash. They can be restored within 30 days.') }}
                     </p>
                 </div>
             </div>
@@ -122,10 +120,10 @@ const handleCancel = () => {
                 />
                 <div class="space-y-1">
                     <Label for="bulk-confirmed" class="cursor-pointer font-medium">
-                        I confirm this bulk deletion
+                        {{ __('I confirm this bulk deletion') }}
                     </Label>
                     <p class="text-sm text-muted-foreground">
-                        I understand that {{ departments.length }} department{{ departments.length > 1 ? 's' : '' }} will be deleted.
+                        {{ __('I understand that :count department(s) will be deleted.', { count: departments.length }) }}
                     </p>
                 </div>
             </div>

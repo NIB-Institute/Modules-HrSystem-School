@@ -11,14 +11,16 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import { ChevronLeft } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { DepartmentFormData, DepartmentEditProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<DepartmentEditProps>();
+const { __ } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Departments', href: '/dashboard/departments' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Departments'), href: '/dashboard/departments' },
     { title: props.department.name, href: `/dashboard/departments/${props.department.uuid}` },
-    { title: 'Edit', href: `/dashboard/departments/${props.department.uuid}/edit` },
+    { title: __('Edit'), href: `/dashboard/departments/${props.department.uuid}/edit` },
 ];
 
 const form = useForm<DepartmentFormData>({
@@ -34,7 +36,6 @@ const form = useForm<DepartmentFormData>({
     total_students: props.department.total_students,
     total_staff: props.department.total_staff,
     status: props.department.status,
-    // Location linking for geofence
     location_id: props.department.location_id ?? null,
     latitude: props.department.latitude,
     longitude: props.department.longitude,
@@ -61,9 +62,7 @@ const getFormData = () => ({
     total_students: form.total_students,
     total_staff: form.total_staff,
     status: form.status,
-    // Location linking (preferred)
     location_id: form.location_id,
-    // Manual geofence fields (fallback if no location_id)
     latitude: form.latitude,
     longitude: form.longitude,
     geofence_radius: form.geofence_radius,
@@ -79,7 +78,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.put(`/dashboard/departments/${props.department.uuid}`, {
             onSuccess: () => {
-                toast.success('Department updated successfully.');
+                toast.success(__('Department updated successfully.'));
                 router.visit('/dashboard/departments');
             },
         });
@@ -89,7 +88,7 @@ const handleSubmit = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head :title="`Edit ${props.department.name}`" />
+        <Head :title="__('Edit :name', { name: props.department.name })" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Header -->
@@ -98,8 +97,8 @@ const handleSubmit = () => {
                     <ChevronLeft class="h-5 w-5" />
                 </Link>
                 <div>
-                    <h1 class="text-xl font-semibold">Edit Department</h1>
-                    <p class="text-sm text-muted-foreground">Editing: {{ props.department.name }}</p>
+                    <h1 class="text-xl font-semibold">{{ __('Edit Department') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ __('Editing: :name', { name: props.department.name }) }}</p>
                 </div>
             </div>
 
@@ -115,10 +114,10 @@ const handleSubmit = () => {
                 <!-- Actions at Bottom -->
                 <div class="flex justify-end gap-3 pt-4">
                     <Button type="button" variant="outline" as-child>
-                        <Link href="/dashboard/departments">Cancel</Link>
+                        <Link href="/dashboard/departments">{{ __('Cancel') }}</Link>
                     </Button>
                     <Button type="submit" :disabled="isFormInvalid || form.processing">
-                        {{ form.processing ? 'Saving...' : 'Save Changes' }}
+                        {{ form.processing ? __('Saving...') : __('Save Changes') }}
                     </Button>
                 </div>
             </form>

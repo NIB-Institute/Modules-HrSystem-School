@@ -11,13 +11,15 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import { ChevronLeft } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { DepartmentFormData, DepartmentCreateProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<DepartmentCreateProps>();
+const { __ } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Departments', href: '/dashboard/departments' },
-    { title: 'Create', href: '/dashboard/departments/create' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Departments'), href: '/dashboard/departments' },
+    { title: __('Create'), href: '/dashboard/departments/create' },
 ];
 
 const form = useForm<DepartmentFormData>({
@@ -33,7 +35,6 @@ const form = useForm<DepartmentFormData>({
     total_students: null,
     total_staff: null,
     status: true,
-    // Location linking for geofence
     location_id: null,
     latitude: null,
     longitude: null,
@@ -42,18 +43,13 @@ const form = useForm<DepartmentFormData>({
     timezone: null,
 });
 
-// Auto-generate code from name
 const generateCode = (name: string): string => {
     if (!name) return '';
-    const prefix = name
-        .replace(/[^a-zA-Z]/g, '')
-        .substring(0, 4)
-        .toUpperCase();
+    const prefix = name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
     const suffix = Math.floor(100 + Math.random() * 900).toString();
     return `${prefix}-${suffix}`;
 };
 
-// Watch name and auto-generate code if code is empty
 watch(() => form.name, (newName) => {
     if (newName && !form.code) {
         form.code = generateCode(newName);
@@ -78,9 +74,7 @@ const getFormData = () => ({
     total_students: form.total_students,
     total_staff: form.total_staff,
     status: form.status,
-    // Location linking (preferred)
     location_id: form.location_id,
-    // Manual geofence fields (fallback if no location_id)
     latitude: form.latitude,
     longitude: form.longitude,
     geofence_radius: form.geofence_radius,
@@ -100,7 +94,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.post('/dashboard/departments', {
             onSuccess: () => {
-                toast.success('Department created successfully.');
+                toast.success(__('Department created successfully.'));
                 router.visit('/dashboard/departments');
             },
         });
@@ -110,7 +104,7 @@ const handleSubmit = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Create Department" />
+        <Head :title="__('Create Department')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Header -->
@@ -119,8 +113,8 @@ const handleSubmit = () => {
                     <ChevronLeft class="h-5 w-5" />
                 </Link>
                 <div>
-                    <h1 class="text-xl font-semibold">Create Department</h1>
-                    <p class="text-sm text-muted-foreground">Add a new department to a school</p>
+                    <h1 class="text-xl font-semibold">{{ __('Create Department') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ __('Add a new department to a school') }}</p>
                 </div>
             </div>
 
@@ -136,10 +130,10 @@ const handleSubmit = () => {
                 <!-- Actions at Bottom -->
                 <div class="flex justify-end gap-3 pt-4">
                     <Button type="button" variant="outline" as-child>
-                        <Link href="/dashboard/departments">Cancel</Link>
+                        <Link href="/dashboard/departments">{{ __('Cancel') }}</Link>
                     </Button>
                     <Button type="submit" :disabled="isFormInvalid || form.processing">
-                        {{ form.processing ? 'Creating...' : 'Create Department' }}
+                        {{ form.processing ? __('Creating...') : __('Create Department') }}
                     </Button>
                 </div>
             </form>

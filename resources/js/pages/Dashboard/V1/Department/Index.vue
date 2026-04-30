@@ -18,74 +18,75 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Building, CheckCircle, XCircle, Search, Eye, Pencil, Trash2, Download, Upload, FileSpreadsheet, Database, Users, QrCode } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { DepartmentIndexProps, Department } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<DepartmentIndexProps>();
+const { __ } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Departments', href: '/dashboard/departments' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Departments'), href: '/dashboard/departments' },
 ];
 
 const search = ref(props.filters.search || '');
 const statusFilter = ref(props.filters.status || 'all');
 const schoolFilter = ref(props.filters.school_id || 'all');
 
-// Selection state - now using v-model with TableReusable
 const selectedUuids = ref<(string | number)[]>([]);
 
 const columns: TableColumn<Department>[] = [
     {
         key: 'name',
-        label: 'Name',
+        label: __('Name'),
         render: (department) => department.name,
     },
     {
         key: 'code',
-        label: 'Code',
+        label: __('Code'),
         render: (department) => department.code || '-',
     },
     {
         key: 'school',
-        label: 'School',
+        label: __('School'),
         render: (department) => department.school_name || '-',
     },
     {
         key: 'head_of_department',
-        label: 'Head',
+        label: __('Head'),
         render: (department) => department.head_of_department || '-',
     },
     {
         key: 'staff_count',
-        label: 'Staff',
+        label: __('Staff'),
         align: 'center',
         render: (department) => department.staff_count ?? 0,
     },
     {
         key: 'status',
-        label: 'Status',
-        render: (department) => department.status ? 'Active' : 'Inactive',
+        label: __('Status'),
+        render: (department) => department.status ? __('Active') : __('Inactive'),
     },
 ];
 
 const actions: TableAction<Department>[] = [
     {
-        label: 'View',
+        label: __('View'),
         icon: Eye,
         onClick: (department) => router.visit(`/dashboard/departments/${department.uuid}`),
     },
     {
-        label: 'Edit',
+        label: __('Edit'),
         icon: Pencil,
         onClick: (department) => router.visit(`/dashboard/departments/${department.uuid}/edit`),
     },
     {
-        label: 'QR Code',
+        label: __('QR Code'),
         icon: QrCode,
         onClick: (department) => router.visit(`/dashboard/departments/${department.uuid}/qr-code`),
         separator: true,
     },
     {
-        label: 'Delete',
+        label: __('Delete'),
         icon: Trash2,
         onClick: (department) => router.visit(`/dashboard/departments/${department.uuid}/delete`),
         variant: 'destructive',
@@ -128,120 +129,80 @@ watch([statusFilter, schoolFilter], () => {
     router.get('/dashboard/departments', getFilterParams(), { preserveState: true });
 });
 
-const handleCreate = () => {
-    router.visit('/dashboard/departments/create');
-};
-
-// Open the column-selectable export/template modal (shared
-// /resources/js/pages/shared/ResourceExportPage.vue).
-const handleExport = () => {
-    router.visit('/dashboard/departments/export-options');
-};
-
-const handleImport = () => {
-    router.visit('/dashboard/departments/import');
-};
-
-const handleDownloadTemplate = () => {
-    router.visit('/dashboard/departments/export-options');
-};
-
-const handleTrash = () => {
-    router.visit('/dashboard/departments/trash');
-};
+const handleCreate = () => router.visit('/dashboard/departments/create');
+const handleExport = () => router.visit('/dashboard/departments/export-options');
+const handleImport = () => router.visit('/dashboard/departments/import');
+const handleDownloadTemplate = () => router.visit('/dashboard/departments/export-options');
+const handleTrash = () => router.visit('/dashboard/departments/trash');
 
 const handleStatusToggle = (department: Department, newStatus: boolean) => {
     router.put(`/dashboard/departments/${department.uuid}/toggle-status`, {
         status: newStatus,
-    }, {
-        preserveState: true,
-        preserveScroll: true,
-    });
+    }, { preserveState: true, preserveScroll: true });
 };
 
 const handleSchoolFilterChange = (value: string | number | boolean | bigint | Record<string, unknown> | null | undefined) => {
-    if (typeof value === 'string') {
-        schoolFilter.value = value;
-    }
+    if (typeof value === 'string') schoolFilter.value = value;
 };
 
 const handleStatusFilterChange = (value: string | number | boolean | bigint | Record<string, unknown> | null | undefined) => {
-    if (typeof value === 'string') {
-        statusFilter.value = value;
-    }
+    if (typeof value === 'string') statusFilter.value = value;
 };
 
-// Bulk delete handler - navigate to confirmation modal
 const openBulkDeleteDialog = () => {
     const params = new URLSearchParams();
-    selectedUuids.value.forEach((uuid) => {
-        params.append('uuids[]', String(uuid));
-    });
+    selectedUuids.value.forEach((uuid) => params.append('uuids[]', String(uuid)));
     router.visit(`/dashboard/departments/bulk-delete?${params.toString()}`);
 };
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Departments" />
+        <Head :title="__('Departments')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-3">
-                <StatsCard
-                    title="Total Departments"
-                    :value="props.stats.total"
-                    :icon="Building"
-                />
-                <StatsCard
-                    title="Active"
-                    :value="props.stats.active"
-                    :icon="CheckCircle"
-                    variant="success"
-                />
-                <StatsCard
-                    title="Inactive"
-                    :value="props.stats.inactive"
-                    :icon="XCircle"
-                    variant="warning"
-                />
+                <StatsCard :title="__('Total Departments')" :value="props.stats.total" :icon="Building" />
+                <StatsCard :title="__('Active')" :value="props.stats.active" :icon="CheckCircle" variant="success" />
+                <StatsCard :title="__('Inactive')" :value="props.stats.inactive" :icon="XCircle" variant="warning" />
             </div>
 
             <!-- Main Content -->
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-semibold">Departments</h2>
-                        <p class="text-sm text-muted-foreground">Manage departments within schools</p>
+                        <h2 class="text-lg font-semibold">{{ __('Departments') }}</h2>
+                        <p class="text-sm text-muted-foreground">{{ __('Manage departments within schools') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
                             <Button variant="default">
                                 <Database class="mr-2 h-4 w-4" />
-                                All
+                                {{ __('All') }}
                             </Button>
                             <Button variant="outline" @click="handleTrash">
                                 <Trash2 class="mr-2 h-4 w-4" />
-                                Trash
+                                {{ __('Trash') }}
                             </Button>
                         </ButtonGroup>
                         <ButtonGroup>
                             <Button variant="outline" @click="handleExport">
                                 <Download class="mr-2 h-4 w-4" />
-                                Export
+                                {{ __('Export') }}
                             </Button>
                             <Button variant="outline" @click="handleImport">
                                 <Upload class="mr-2 h-4 w-4" />
-                                Import
+                                {{ __('Import') }}
                             </Button>
                             <Button variant="outline" @click="handleDownloadTemplate">
                                 <FileSpreadsheet class="mr-2 h-4 w-4" />
-                                Template
+                                {{ __('Template') }}
                             </Button>
                         </ButtonGroup>
                         <Button @click="handleCreate">
                             <Plus class="mr-2 h-4 w-4" />
-                            Add Department
+                            {{ __('Add Department') }}
                         </Button>
                     </div>
                 </div>
@@ -252,17 +213,17 @@ const openBulkDeleteDialog = () => {
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             v-model="search"
-                            placeholder="Search departments..."
+                            :placeholder="__('Search departments...')"
                             class="pl-9"
                             @keyup.enter="handleSearch"
                         />
                     </div>
                     <Select :model-value="schoolFilter" @update:model-value="handleSchoolFilterChange">
                         <SelectTrigger class="w-[200px]">
-                            <SelectValue placeholder="School" />
+                            <SelectValue :placeholder="__('School')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Schools</SelectItem>
+                            <SelectItem value="all">{{ __('All Schools') }}</SelectItem>
                             <SelectItem v-for="school in props.schools" :key="school.value" :value="school.value">
                                 {{ school.label }}
                             </SelectItem>
@@ -270,17 +231,17 @@ const openBulkDeleteDialog = () => {
                     </Select>
                     <Select :model-value="statusFilter" @update:model-value="handleStatusFilterChange">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Status" />
+                            <SelectValue :placeholder="__('Status')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="1">Active</SelectItem>
-                            <SelectItem value="0">Inactive</SelectItem>
+                            <SelectItem value="all">{{ __('All Status') }}</SelectItem>
+                            <SelectItem value="1">{{ __('Active') }}</SelectItem>
+                            <SelectItem value="0">{{ __('Inactive') }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
-                <!-- Table with built-in selection -->
+                <!-- Table -->
                 <TableReusable
                     v-model:selected="selectedUuids"
                     :data="props.departments.data"
@@ -296,7 +257,7 @@ const openBulkDeleteDialog = () => {
                     <template #bulk-actions>
                         <Button variant="destructive" size="sm" @click="openBulkDeleteDialog">
                             <Trash2 class="mr-2 h-4 w-4" />
-                            Delete Selected
+                            {{ __('Delete Selected') }}
                         </Button>
                     </template>
                     <template #cell-name="{ item }">
@@ -326,13 +287,12 @@ const openBulkDeleteDialog = () => {
                                 @update:model-value="handleStatusToggle(item, $event)"
                             />
                             <span class="text-sm text-muted-foreground">
-                                {{ item.status ? 'Active' : 'Inactive' }}
+                                {{ item.status ? __('Active') : __('Inactive') }}
                             </span>
                         </div>
                     </template>
                 </TableReusable>
             </div>
         </div>
-
     </AppLayout>
 </template>
