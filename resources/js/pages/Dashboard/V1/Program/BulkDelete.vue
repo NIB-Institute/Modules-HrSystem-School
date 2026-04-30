@@ -8,11 +8,13 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AlertTriangle, GraduationCap } from 'lucide-vue-next';
 import type { Program } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 interface BulkDeleteProps {
     programs: Program[];
 }
 
+const { __ } = useTranslation();
 const props = defineProps<BulkDeleteProps>();
 
 const { show, close, redirect } = useModal();
@@ -42,7 +44,7 @@ const canSubmit = computed(() => confirmed.value === true);
 const handleSubmit = () => {
     form.delete('/dashboard/programs/bulk-delete', {
         onSuccess: () => {
-            toast.success(`${props.programs.length} program(s) deleted successfully.`);
+            toast.success(__(':count program(s) deleted successfully.', { count: props.programs.length }));
             setTimeout(() => {
                 close();
                 redirect();
@@ -65,11 +67,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        :title="`Delete ${programs.length} Program${programs.length > 1 ? 's' : ''}`"
-        description="This action will move the selected programs to trash"
+        :title="__('Delete :count Program(s)', { count: programs.length })"
+        :description="__('This action will move the selected programs to trash')"
         mode="delete"
         size="md"
-        :submit-text="`Delete ${programs.length} Program${programs.length > 1 ? 's' : ''}`"
+        :submit-text="__('Delete :count Program(s)', { count: programs.length })"
         :loading="form.processing"
         :disabled="!canSubmit"
         @submit="handleSubmit"
@@ -79,7 +81,7 @@ const handleCancel = () => {
             <!-- Programs List -->
             <div class="space-y-2">
                 <p class="text-sm font-medium text-muted-foreground">
-                    The following programs will be deleted:
+                    {{ __('The following programs will be deleted:') }}
                 </p>
                 <div class="max-h-48 space-y-2 overflow-y-auto rounded-lg border p-3">
                     <div
@@ -105,10 +107,10 @@ const handleCancel = () => {
                 <AlertTriangle class="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
                 <div class="space-y-1">
                     <p class="text-sm font-medium text-destructive">
-                        You are about to delete {{ programs.length }} program{{ programs.length > 1 ? 's' : '' }}
+                        {{ __('You are about to delete :count program(s)', { count: programs.length }) }}
                     </p>
                     <p class="text-sm text-muted-foreground">
-                        These programs will be moved to trash. They can be restored within 30 days.
+                        {{ __('These programs will be moved to trash. They can be restored within 30 days.') }}
                     </p>
                 </div>
             </div>
@@ -122,10 +124,10 @@ const handleCancel = () => {
                 />
                 <div class="space-y-1">
                     <Label for="bulk-confirmed" class="cursor-pointer font-medium">
-                        I confirm this bulk deletion
+                        {{ __('I confirm this bulk deletion') }}
                     </Label>
                     <p class="text-sm text-muted-foreground">
-                        I understand that {{ programs.length }} program{{ programs.length > 1 ? 's' : '' }} will be deleted.
+                        {{ __('I understand that :count program(s) will be deleted.', { count: programs.length }) }}
                     </p>
                 </div>
             </div>

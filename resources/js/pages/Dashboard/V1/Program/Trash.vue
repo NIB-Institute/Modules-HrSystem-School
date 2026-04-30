@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Database, Trash2, RotateCcw } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { TrashPaginationData, TrashConfigLocal, TrashConfig } from '@/types/trash';
+import { useTranslation } from '@/composables/useTranslation';
 
+const { __ } = useTranslation();
 interface Props {
     trashItems: TrashPaginationData;
     config: TrashConfig;
@@ -22,14 +24,14 @@ const props = defineProps<Props>();
 const selectedUuids = ref<(string | number)[]>([]);
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Programs', href: '/dashboard/programs' },
-    { title: 'Trash', href: '/dashboard/programs/trash' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Programs'), href: '/dashboard/programs' },
+    { title: __('Trash'), href: '/dashboard/programs/trash' },
 ];
 
 const trashConfig: TrashConfigLocal = {
-    entityLabel: 'Program',
-    entityLabelPlural: 'Programs',
+    entityLabel: __('Program'),
+    entityLabelPlural: __('Programs'),
     restoreRoute: (uuid: string) => `/dashboard/programs/${uuid}/restore`,
     forceDeleteRoute: (uuid: string) => `/dashboard/programs/${uuid}/force-delete`,
     listRoute: '/dashboard/programs/trash',
@@ -66,7 +68,7 @@ const handleBulkRestore = () => {
 };
 
 const handleBulkForceDelete = () => {
-    if (confirm(`Are you sure you want to permanently delete ${selectedUuids.value.length} item(s)? This action cannot be undone.`)) {
+    if (confirm(__('Are you sure you want to permanently delete :count item(s)? This action cannot be undone.', { count: selectedUuids.value.length }))) {
         router.delete('/dashboard/programs/trash/bulk-force-delete', {
             data: { uuids: selectedUuids.value },
             preserveState: false,
@@ -80,25 +82,25 @@ const handleBulkForceDelete = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Programs Trash" />
+        <Head :title="__('Programs Trash')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold">Programs Trash</h1>
+                    <h1 class="text-2xl font-bold">{{ __('Programs Trash') }}</h1>
                     <p class="text-sm text-muted-foreground">
-                        Manage deleted programs - restore or permanently delete
+                        {{ __('Manage deleted programs - restore or permanently delete') }}
                     </p>
                 </div>
                 <ButtonGroup>
                     <Button variant="outline" @click="handleAll">
                         <Database class="mr-2 h-4 w-4" />
-                        All
+                        {{ __('All') }}
                     </Button>
                     <Button variant="default">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Trash
+                        {{ __('Trash') }}
                     </Button>
                 </ButtonGroup>
             </div>
@@ -112,7 +114,7 @@ const handleBulkForceDelete = () => {
                 :show-type="false"
                 :selectable="true"
                 select-key="uuid"
-                empty-message="No deleted programs found."
+                :empty-message="__('No deleted programs found.')"
                 empty-trash-route="/dashboard/programs/trash/empty"
                 @page-change="handlePageChange"
                 @search="handleSearch"
@@ -120,11 +122,11 @@ const handleBulkForceDelete = () => {
                 <template #bulk-actions>
                     <Button variant="outline" size="sm" @click="handleBulkRestore">
                         <RotateCcw class="mr-2 h-4 w-4" />
-                        Restore Selected
+                        {{ __('Restore Selected') }}
                     </Button>
                     <Button variant="destructive" size="sm" @click="handleBulkForceDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Delete Permanently
+                        {{ __('Delete Permanently') }}
                     </Button>
                 </template>
             </TrashTable>

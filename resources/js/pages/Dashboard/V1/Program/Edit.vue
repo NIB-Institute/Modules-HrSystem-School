@@ -7,8 +7,10 @@ import { computed, watch } from 'vue';
 import { toast } from 'vue-sonner';
 import { programSchema } from '@school/validation/programSchema';
 import { useFormValidation } from '@/composables/useFormValidation';
-import type { ProgramFormData, ProgramEditProps, DegreeLevel } from '@school/types';
+import type { ProgramFormData, ProgramEditProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
+const { __ } = useTranslation();
 const props = defineProps<ProgramEditProps>();
 
 const { show, close, redirect } = useModal();
@@ -72,7 +74,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.put(`/dashboard/programs/${props.program.uuid}`, {
             onSuccess: () => {
-                toast.success('Program updated successfully.');
+                toast.success(__('Program updated successfully.'));
                 setTimeout(() => {
                     close();
                     redirect();
@@ -92,11 +94,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Edit Program"
-        :description="`Editing: ${program.name}`"
+        :title="__('Edit Program')"
+        :description="__('Editing: :name', { name: program.name })"
         mode="edit"
         size="lg"
-        submit-text="Save Changes"
+        :submit-text="__('Save Changes')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

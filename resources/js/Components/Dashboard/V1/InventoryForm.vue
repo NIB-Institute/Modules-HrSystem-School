@@ -18,6 +18,9 @@ import type {
     InventoryStatus,
     InventoryCondition,
 } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
+
+const { __ } = useTranslation();
 
 interface Props {
     mode?: 'create' | 'edit';
@@ -60,36 +63,36 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="space-y-2">
                 <Label for="asset_tag">
-                    Asset Tag <span class="text-destructive">*</span>
+                    {{ __('Asset Tag') }} <span class="text-destructive">*</span>
                 </Label>
-                <Input id="asset_tag" v-model="model.asset_tag" placeholder="e.g. PRJ-001" />
+                <Input id="asset_tag" v-model="model.asset_tag" :placeholder="__('e.g. PRJ-001')" />
                 <p v-if="model.errors.asset_tag" class="text-xs text-destructive">{{ model.errors.asset_tag }}</p>
             </div>
 
             <div class="space-y-2">
-                <Label for="serial_number">Serial Number</Label>
-                <Input id="serial_number" v-model="model.serial_number" placeholder="Optional" />
+                <Label for="serial_number">{{ __('Serial Number') }}</Label>
+                <Input id="serial_number" v-model="model.serial_number" :placeholder="__('Optional')" />
                 <p v-if="model.errors.serial_number" class="text-xs text-destructive">{{ model.errors.serial_number }}</p>
             </div>
         </div>
 
         <!-- Name -->
         <div class="space-y-2">
-            <Label for="name">Display Name</Label>
-            <Input id="name" v-model="model.name" placeholder="Optional, defaults to equipment name" />
+            <Label for="name">{{ __('Display Name') }}</Label>
+            <Input id="name" v-model="model.name" :placeholder="__('Optional, defaults to equipment name')" />
         </div>
 
         <!-- Equipment + Status + Condition -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div class="space-y-2">
                 <Label>
-                    Equipment <span class="text-destructive">*</span>
+                    {{ __('Equipment') }} <span class="text-destructive">*</span>
                 </Label>
                 <Select
                     :model-value="model.equipment_id ? String(model.equipment_id) : ''"
                     @update:model-value="setSelect('equipment_id')"
                 >
-                    <SelectTrigger><SelectValue placeholder="Select equipment" /></SelectTrigger>
+                    <SelectTrigger><SelectValue :placeholder="__('Select equipment')" /></SelectTrigger>
                     <SelectContent>
                         <SelectItem v-for="e in equipment" :key="e.id" :value="String(e.id)">
                             {{ e.name }}
@@ -101,13 +104,13 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
 
             <div class="space-y-2">
                 <Label>
-                    Status <span class="text-destructive">*</span>
+                    {{ __('Status') }} <span class="text-destructive">*</span>
                 </Label>
                 <Select
                     :model-value="model.status"
                     @update:model-value="setSelect('status')"
                 >
-                    <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
+                    <SelectTrigger><SelectValue :placeholder="__('Select status')" /></SelectTrigger>
                     <SelectContent>
                         <SelectItem v-for="(label, value) in statuses" :key="value" :value="value">
                             {{ label }}
@@ -118,13 +121,13 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
 
             <div class="space-y-2">
                 <Label>
-                    Condition <span class="text-destructive">*</span>
+                    {{ __('Condition') }} <span class="text-destructive">*</span>
                 </Label>
                 <Select
                     :model-value="model.condition"
                     @update:model-value="setSelect('condition')"
                 >
-                    <SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger>
+                    <SelectTrigger><SelectValue :placeholder="__('Select condition')" /></SelectTrigger>
                     <SelectContent>
                         <SelectItem v-for="(label, value) in conditions" :key="value" :value="value">
                             {{ label }}
@@ -137,14 +140,14 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
         <!-- Classroom + Department -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="space-y-2">
-                <Label>Classroom</Label>
+                <Label>{{ __('Classroom') }}</Label>
                 <Select
                     :model-value="model.classroom_id ? String(model.classroom_id) : NONE"
                     @update:model-value="setSelect('classroom_id')"
                 >
-                    <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                    <SelectTrigger><SelectValue :placeholder="__('None')" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem :value="NONE">None</SelectItem>
+                        <SelectItem :value="NONE">{{ __('None') }}</SelectItem>
                         <SelectItem v-for="c in classrooms" :key="c.id" :value="String(c.id)">
                             {{ c.name }}
                         </SelectItem>
@@ -153,14 +156,14 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
             </div>
 
             <div class="space-y-2">
-                <Label>Department</Label>
+                <Label>{{ __('Department') }}</Label>
                 <Select
                     :model-value="model.department_id ? String(model.department_id) : NONE"
                     @update:model-value="setSelect('department_id')"
                 >
-                    <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                    <SelectTrigger><SelectValue :placeholder="__('None')" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem :value="NONE">None</SelectItem>
+                        <SelectItem :value="NONE">{{ __('None') }}</SelectItem>
                         <SelectItem v-for="d in departments" :key="d.id" :value="String(d.id)">
                             {{ d.name }}
                         </SelectItem>
@@ -172,12 +175,12 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
         <!-- Acquisition -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div class="space-y-2">
-                <Label for="purchased_at">Purchased At</Label>
+                <Label for="purchased_at">{{ __('Purchased At') }}</Label>
                 <Input id="purchased_at" type="date" v-model="model.purchased_at" />
             </div>
 
             <div class="space-y-2">
-                <Label for="cost">Cost</Label>
+                <Label for="cost">{{ __('Cost') }}</Label>
                 <Input
                     id="cost"
                     type="number"
@@ -189,34 +192,34 @@ const setSelect = <K extends keyof InventoryFormData>(key: K) =>
             </div>
 
             <div class="space-y-2">
-                <Label for="vendor">Vendor</Label>
-                <Input id="vendor" v-model="model.vendor" placeholder="Supplier name" />
+                <Label for="vendor">{{ __('Vendor') }}</Label>
+                <Input id="vendor" v-model="model.vendor" :placeholder="__('Supplier name')" />
             </div>
         </div>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="space-y-2">
-                <Label for="warranty_until">Warranty Until</Label>
+                <Label for="warranty_until">{{ __('Warranty Until') }}</Label>
                 <Input id="warranty_until" type="date" v-model="model.warranty_until" />
                 <p v-if="model.errors.warranty_until" class="text-xs text-destructive">{{ model.errors.warranty_until }}</p>
             </div>
 
             <div class="flex items-center gap-2 pt-7">
                 <Switch id="is_active" v-model:checked="isActive" />
-                <Label for="is_active" class="cursor-pointer">Active</Label>
+                <Label for="is_active" class="cursor-pointer">{{ __('Active') }}</Label>
             </div>
         </div>
 
         <!-- Notes -->
         <div class="space-y-2">
-            <Label for="notes">Notes</Label>
-            <Textarea id="notes" v-model="model.notes" placeholder="Optional internal notes..." rows="3" />
+            <Label for="notes">{{ __('Notes') }}</Label>
+            <Textarea id="notes" v-model="model.notes" :placeholder="__('Optional internal notes...')" rows="3" />
         </div>
 
         <!-- Images (photos / receipts / docs) -->
         <ImageUpload
             v-model="model.images"
-            label="Photos & Documents"
+            :label="__('Photos & Documents')"
             :max-files="10"
             :max-size="5"
             :error="model.errors['images'] as string | undefined"

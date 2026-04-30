@@ -18,12 +18,14 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, BookOpen, CheckCircle, XCircle, Search, Eye, Pencil, Trash2, GraduationCap, Download, Upload, FileSpreadsheet, Database } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { ProgramIndexProps, Program } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
+const { __ } = useTranslation();
 const props = defineProps<ProgramIndexProps>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Programs', href: '/dashboard/programs' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Programs'), href: '/dashboard/programs' },
 ];
 
 const search = ref(props.filters.search || '');
@@ -46,44 +48,44 @@ const openBulkDeleteDialog = () => {
 const columns: TableColumn<Program>[] = [
     {
         key: 'name',
-        label: 'Name',
+        label: __('Name'),
         render: (program) => program.name,
     },
     {
         key: 'code',
-        label: 'Code',
+        label: __('Code'),
         render: (program) => program.code || '-',
     },
     {
         key: 'degree_level',
-        label: 'Degree Level',
+        label: __('Degree Level'),
         render: (program) => program.degree_level_label,
     },
     {
         key: 'school_name',
-        label: 'School',
+        label: __('School'),
         render: (program) => program.school_name || '-',
     },
     {
         key: 'status',
-        label: 'Status',
-        render: (program) => program.status ? 'Active' : 'Inactive',
+        label: __('Status'),
+        render: (program) => program.status ? __('Active') : __('Inactive'),
     },
 ];
 
 const actions: TableAction<Program>[] = [
     {
-        label: 'View',
+        label: __('View'),
         icon: Eye,
         onClick: (program) => router.visit(`/dashboard/programs/${program.uuid}`),
     },
     {
-        label: 'Edit',
+        label: __('Edit'),
         icon: Pencil,
         onClick: (program) => router.visit(`/dashboard/programs/${program.uuid}/edit`),
     },
     {
-        label: 'Delete',
+        label: __('Delete'),
         icon: Trash2,
         onClick: (program) => router.visit(`/dashboard/programs/${program.uuid}/delete`),
         variant: 'destructive',
@@ -132,8 +134,6 @@ const handleCreate = () => {
     router.visit('/dashboard/programs/create');
 };
 
-// Open the column-selectable export/template modal (shared
-// /resources/js/pages/shared/ResourceExportPage.vue).
 const handleExport = () => {
     router.visit('/dashboard/programs/export-options');
 };
@@ -176,24 +176,24 @@ const schoolOptions = computed(() => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Programs" />
+        <Head :title="__('Programs')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-3">
                 <StatsCard
-                    title="Total Programs"
+                    :title="__('Total Programs')"
                     :value="props.stats.total"
                     :icon="BookOpen"
                 />
                 <StatsCard
-                    title="Active"
+                    :title="__('Active')"
                     :value="props.stats.active"
                     :icon="CheckCircle"
                     variant="success"
                 />
                 <StatsCard
-                    title="Inactive"
+                    :title="__('Inactive')"
                     :value="props.stats.inactive"
                     :icon="XCircle"
                     variant="warning"
@@ -204,37 +204,37 @@ const schoolOptions = computed(() => {
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-semibold">Programs</h2>
-                        <p class="text-sm text-muted-foreground">Manage academic programs</p>
+                        <h2 class="text-lg font-semibold">{{ __('Programs') }}</h2>
+                        <p class="text-sm text-muted-foreground">{{ __('Manage academic programs') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
                             <Button variant="default">
                                 <Database class="mr-2 h-4 w-4" />
-                                All
+                                {{ __('All') }}
                             </Button>
                             <Button variant="outline" @click="handleTrash">
                                 <Trash2 class="mr-2 h-4 w-4" />
-                                Trash
+                                {{ __('Trash') }}
                             </Button>
                         </ButtonGroup>
                         <ButtonGroup>
                             <Button variant="outline" @click="handleExport">
                                 <Download class="mr-2 h-4 w-4" />
-                                Export
+                                {{ __('Export') }}
                             </Button>
                             <Button variant="outline" @click="handleImport">
                                 <Upload class="mr-2 h-4 w-4" />
-                                Import
+                                {{ __('Import') }}
                             </Button>
                             <Button variant="outline" @click="handleDownloadTemplate">
                                 <FileSpreadsheet class="mr-2 h-4 w-4" />
-                                Template
+                                {{ __('Template') }}
                             </Button>
                         </ButtonGroup>
                         <Button @click="handleCreate">
                             <Plus class="mr-2 h-4 w-4" />
-                            Add Program
+                            {{ __('Add Program') }}
                         </Button>
                     </div>
                 </div>
@@ -245,17 +245,17 @@ const schoolOptions = computed(() => {
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             v-model="search"
-                            placeholder="Search programs..."
+                            :placeholder="__('Search programs...')"
                             class="pl-9"
                             @keyup.enter="handleSearch"
                         />
                     </div>
                     <Select v-model="degreeLevelFilter">
                         <SelectTrigger class="w-[180px]">
-                            <SelectValue placeholder="Degree Level" />
+                            <SelectValue :placeholder="__('Degree Level')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Levels</SelectItem>
+                            <SelectItem value="all">{{ __('All Levels') }}</SelectItem>
                             <SelectItem v-for="level in degreeLevelOptions" :key="level.value" :value="level.value">
                                 {{ level.label }}
                             </SelectItem>
@@ -263,10 +263,10 @@ const schoolOptions = computed(() => {
                     </Select>
                     <Select v-model="schoolFilter">
                         <SelectTrigger class="w-[180px]">
-                            <SelectValue placeholder="School" />
+                            <SelectValue :placeholder="__('School')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Schools</SelectItem>
+                            <SelectItem value="all">{{ __('All Schools') }}</SelectItem>
                             <SelectItem v-for="school in schoolOptions" :key="school.value" :value="school.value">
                                 {{ school.label }}
                             </SelectItem>
@@ -274,12 +274,12 @@ const schoolOptions = computed(() => {
                     </Select>
                     <Select v-model="statusFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Status" />
+                            <SelectValue :placeholder="__('Status')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="1">Active</SelectItem>
-                            <SelectItem value="0">Inactive</SelectItem>
+                            <SelectItem value="all">{{ __('All Status') }}</SelectItem>
+                            <SelectItem value="1">{{ __('Active') }}</SelectItem>
+                            <SelectItem value="0">{{ __('Inactive') }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -300,7 +300,7 @@ const schoolOptions = computed(() => {
                     <template #bulk-actions>
                         <Button variant="destructive" size="sm" @click="openBulkDeleteDialog">
                             <Trash2 class="mr-2 h-4 w-4" />
-                            Delete Selected
+                            {{ __('Delete Selected') }}
                         </Button>
                     </template>
                     <template #cell-name="{ item }">
@@ -324,7 +324,7 @@ const schoolOptions = computed(() => {
                                 @update:model-value="handleStatusToggle(item, $event)"
                             />
                             <span class="text-sm text-muted-foreground">
-                                {{ item.status ? 'Active' : 'Inactive' }}
+                                {{ item.status ? __('Active') : __('Inactive') }}
                             </span>
                         </div>
                     </template>

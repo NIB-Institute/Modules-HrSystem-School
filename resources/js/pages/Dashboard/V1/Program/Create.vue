@@ -7,8 +7,10 @@ import { computed, watch } from 'vue';
 import { toast } from 'vue-sonner';
 import { programSchema } from '@school/validation/programSchema';
 import { useFormValidation } from '@/composables/useFormValidation';
-import type { ProgramFormData, ProgramCreateProps, DegreeLevel } from '@school/types';
+import type { ProgramFormData, ProgramCreateProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
+const { __ } = useTranslation();
 const props = defineProps<ProgramCreateProps>();
 
 const { show, close, redirect } = useModal();
@@ -76,7 +78,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.post('/dashboard/programs', {
             onSuccess: () => {
-                toast.success('Program created successfully.');
+                toast.success(__('Program created successfully.'));
                 setTimeout(() => {
                     close();
                     redirect();
@@ -96,11 +98,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Create Program"
-        description="Add a new academic program"
+        :title="__('Create Program')"
+        :description="__('Add a new academic program')"
         mode="create"
         size="lg"
-        submit-text="Create Program"
+        :submit-text="__('Create Program')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

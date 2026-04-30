@@ -21,12 +21,14 @@ import {
 } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { ProgramShowProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
+const { __ } = useTranslation();
 const props = defineProps<ProgramShowProps>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Programs', href: '/dashboard/programs' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Programs'), href: '/dashboard/programs' },
     { title: props.program.name, href: `/dashboard/programs/${props.program.uuid}` },
 ];
 
@@ -67,12 +69,12 @@ const formatCurrency = (value: number | string | null) => {
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-semibold">{{ program.name }}</h1>
                                 <Badge :variant="program.status ? 'default' : 'secondary'">
-                                    {{ program.status ? 'Active' : 'Inactive' }}
+                                    {{ program.status ? __('Active') : __('Inactive') }}
                                 </Badge>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Badge variant="outline">{{ program.degree_level_label }}</Badge>
-                                <span v-if="program.code">Code: {{ program.code }}</span>
+                                <span v-if="program.code">{{ __('Code') }}: {{ program.code }}</span>
                             </div>
                         </div>
                     </div>
@@ -80,11 +82,11 @@ const formatCurrency = (value: number | string | null) => {
                 <div class="flex items-center gap-2">
                     <Button variant="outline" @click="handleEdit">
                         <Pencil class="mr-2 h-4 w-4" />
-                        Edit
+                        {{ __('Edit') }}
                     </Button>
                     <Button variant="destructive" @click="handleDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Delete
+                        {{ __('Delete') }}
                     </Button>
                 </div>
             </div>
@@ -92,22 +94,22 @@ const formatCurrency = (value: number | string | null) => {
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-4">
                 <StatsCard
-                    title="Courses"
+                    :title="__('Courses')"
                     :value="stats.courses_count"
                     :icon="BookOpen"
                 />
                 <StatsCard
-                    title="Current Enrollment"
+                    :title="__('Current Enrollment')"
                     :value="stats.current_enrollment"
                     :icon="Users"
                 />
                 <StatsCard
-                    title="Max Students"
+                    :title="__('Max Students')"
                     :value="stats.max_students"
                     :icon="Users"
                 />
                 <StatsCard
-                    title="Credits Required"
+                    :title="__('Credits Required')"
                     :value="stats.credits_required"
                     :icon="Award"
                 />
@@ -120,7 +122,7 @@ const formatCurrency = (value: number | string | null) => {
                     <!-- Description -->
                     <Card v-if="program.description">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">About</CardTitle>
+                            <CardTitle class="text-base">{{ __('About') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p class="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -132,7 +134,7 @@ const formatCurrency = (value: number | string | null) => {
                     <!-- Admission Requirements -->
                     <Card v-if="program.admission_requirements">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Admission Requirements</CardTitle>
+                            <CardTitle class="text-base">{{ __('Admission Requirements') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p class="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -144,7 +146,7 @@ const formatCurrency = (value: number | string | null) => {
                     <!-- Program Information -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Program Information</CardTitle>
+                            <CardTitle class="text-base">{{ __('Program Information') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div class="grid gap-4 sm:grid-cols-2">
@@ -153,7 +155,7 @@ const formatCurrency = (value: number | string | null) => {
                                         <Building2 class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">School</p>
+                                        <p class="text-xs text-muted-foreground">{{ __('School') }}</p>
                                         <p class="text-sm font-medium">{{ program.school_name }}</p>
                                     </div>
                                 </div>
@@ -162,7 +164,7 @@ const formatCurrency = (value: number | string | null) => {
                                         <FileText class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Department</p>
+                                        <p class="text-xs text-muted-foreground">{{ __('Department') }}</p>
                                         <p class="text-sm font-medium">{{ program.department_name }}</p>
                                     </div>
                                 </div>
@@ -171,7 +173,7 @@ const formatCurrency = (value: number | string | null) => {
                                         <User class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Program Coordinator</p>
+                                        <p class="text-xs text-muted-foreground">{{ __('Program Coordinator') }}</p>
                                         <p class="text-sm font-medium">{{ program.program_coordinator }}</p>
                                     </div>
                                 </div>
@@ -180,7 +182,7 @@ const formatCurrency = (value: number | string | null) => {
                                         <DollarSign class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Tuition Fee</p>
+                                        <p class="text-xs text-muted-foreground">{{ __('Tuition Fee') }}</p>
                                         <p class="text-sm font-medium">{{ formatCurrency(program.tuition_fee) }}</p>
                                     </div>
                                 </div>
@@ -194,43 +196,43 @@ const formatCurrency = (value: number | string | null) => {
                     <!-- Details -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Details</CardTitle>
+                            <CardTitle class="text-base">{{ __('Details') }}</CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
                             <div class="flex items-center gap-3">
                                 <GraduationCap class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Degree Level</p>
+                                    <p class="text-xs text-muted-foreground">{{ __('Degree Level') }}</p>
                                     <p class="text-sm font-medium">{{ program.degree_level_label }}</p>
                                 </div>
                             </div>
                             <div v-if="program.duration_years" class="flex items-center gap-3">
                                 <Clock class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Duration</p>
-                                    <p class="text-sm font-medium">{{ program.duration_years }} {{ program.duration_years === 1 ? 'Year' : 'Years' }}</p>
+                                    <p class="text-xs text-muted-foreground">{{ __('Duration') }}</p>
+                                    <p class="text-sm font-medium">{{ program.duration_years }} {{ program.duration_years === 1 ? __('Year') : __('Years') }}</p>
                                 </div>
                             </div>
                             <div v-if="program.credits_required" class="flex items-center gap-3">
                                 <Award class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Credits Required</p>
+                                    <p class="text-xs text-muted-foreground">{{ __('Credits Required') }}</p>
                                     <p class="text-sm font-medium">{{ program.credits_required }}</p>
                                 </div>
                             </div>
                             <div v-if="program.accreditation_status" class="flex items-center gap-3">
                                 <Award class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Accreditation Status</p>
+                                    <p class="text-xs text-muted-foreground">{{ __('Accreditation Status') }}</p>
                                     <p class="text-sm font-medium">{{ program.accreditation_status }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <Users class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Enrollment</p>
+                                    <p class="text-xs text-muted-foreground">{{ __('Enrollment') }}</p>
                                     <p class="text-sm font-medium">
-                                        {{ program.current_enrollment ?? 0 }} / {{ program.max_students ?? 'Unlimited' }}
+                                        {{ program.current_enrollment ?? 0 }} / {{ program.max_students ?? __('Unlimited') }}
                                     </p>
                                 </div>
                             </div>
