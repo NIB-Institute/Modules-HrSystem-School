@@ -19,19 +19,19 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const { t } = useTranslation();
+const { __ } = useTranslation();
 
 const selectedUuids = ref<(string | number)[]>([]);
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: t('Dashboard'), href: '/dashboard' },
-    { title: t('Inventory'), href: '/dashboard/inventories' },
-    { title: t('Trash'), href: '/dashboard/inventories/trash' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Inventory'), href: '/dashboard/inventories' },
+    { title: __('Trash'), href: '/dashboard/inventories/trash' },
 ];
 
 const trashConfig: TrashConfigLocal = {
-    entityLabel: t('Item'),
-    entityLabelPlural: t('Items'),
+    entityLabel: __('Item'),
+    entityLabelPlural: __('Items'),
     restoreRoute: (uuid: string) => `/dashboard/inventories/${uuid}/restore`,
     forceDeleteRoute: (uuid: string) => `/dashboard/inventories/${uuid}/force-delete`,
     listRoute: '/dashboard/inventories/trash',
@@ -68,7 +68,7 @@ const handleBulkRestore = () => {
 };
 
 const handleBulkForceDelete = () => {
-    if (confirm(t('Are you sure you want to permanently delete :count item(s)? This action cannot be undone.', { count: selectedUuids.value.length }))) {
+    if (confirm(__('Are you sure you want to permanently delete :count item(s)? This action cannot be undone.', { count: selectedUuids.value.length }))) {
         router.delete('/dashboard/inventories/trash/bulk-force-delete', {
             data: { uuids: selectedUuids.value },
             preserveState: false,
@@ -82,24 +82,24 @@ const handleBulkForceDelete = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head :title="t('Inventory Trash')" />
+        <Head :title="__('Inventory Trash')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold">{{ t('Inventory Trash') }}</h1>
+                    <h1 class="text-2xl font-bold">{{ __('Inventory Trash') }}</h1>
                     <p class="text-sm text-muted-foreground">
-                        {{ t('Manage deleted inventory items - restore or permanently delete') }}
+                        {{ __('Manage deleted inventory items - restore or permanently delete') }}
                     </p>
                 </div>
                 <ButtonGroup>
                     <Button variant="outline" @click="handleAll">
                         <Database class="mr-2 h-4 w-4" />
-                        {{ t('All') }}
+                        {{ __('All') }}
                     </Button>
                     <Button variant="default">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        {{ t('Trash') }}
+                        {{ __('Trash') }}
                     </Button>
                 </ButtonGroup>
             </div>
@@ -112,7 +112,7 @@ const handleBulkForceDelete = () => {
                 :show-type="false"
                 :selectable="true"
                 select-key="uuid"
-                :empty-message="t('No deleted items found.')"
+                :empty-message="__('No deleted items found.')"
                 empty-trash-route="/dashboard/inventories/trash/empty"
                 @page-change="handlePageChange"
                 @search="handleSearch"
@@ -120,11 +120,11 @@ const handleBulkForceDelete = () => {
                 <template #bulk-actions>
                     <Button variant="outline" size="sm" @click="handleBulkRestore">
                         <RotateCcw class="mr-2 h-4 w-4" />
-                        {{ t('Restore Selected') }}
+                        {{ __('Restore Selected') }}
                     </Button>
                     <Button variant="destructive" size="sm" @click="handleBulkForceDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        {{ t('Delete Permanently') }}
+                        {{ __('Delete Permanently') }}
                     </Button>
                 </template>
             </TrashTable>

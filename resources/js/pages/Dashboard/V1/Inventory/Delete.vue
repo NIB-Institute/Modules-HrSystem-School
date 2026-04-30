@@ -8,7 +8,7 @@ import { useTranslation } from '@/composables/useTranslation';
 import type { InventoryDeleteProps } from '@school/types';
 
 const props = defineProps<InventoryDeleteProps>();
-const { t } = useTranslation();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 const isDeleting = ref(false);
@@ -28,7 +28,7 @@ const handleConfirm = () => {
 
     router.delete(`/dashboard/inventories/${props.inventory.uuid}`, {
         onSuccess: () => {
-            toast.success(t('Inventory item deleted successfully.'));
+            toast.success(__('Inventory item deleted successfully.'));
             close();
             redirect();
         },
@@ -47,9 +47,9 @@ const handleCancel = () => {
 <template>
     <ModalConfirm
         v-model:open="isOpen"
-        :title="t('Delete Inventory Item')"
-        :description="t('Are you sure you want to delete \':tag\'?', { tag: inventory.asset_tag })"
-        :confirm-text="t('Delete')"
+        :title="__('Delete Inventory Item')"
+        :description="__('Are you sure you want to delete \':tag\'?', { tag: inventory.asset_tag })"
+        :confirm-text="__('Delete')"
         :loading="isDeleting"
         variant="danger"
         @confirm="handleConfirm"
@@ -57,7 +57,7 @@ const handleCancel = () => {
     >
         <div class="space-y-4">
             <p class="text-sm text-muted-foreground">
-                {{ t('This will move the inventory item to trash. Soft-deleted items can be restored later.') }}
+                {{ __('This will move the inventory item to trash. Soft-deleted items can be restored later.') }}
             </p>
             <div class="rounded-lg border border-border bg-muted/30 p-3 text-sm">
                 <div class="flex justify-between"><span class="text-muted-foreground">Asset Tag</span><span class="font-medium">{{ inventory.asset_tag }}</span></div>

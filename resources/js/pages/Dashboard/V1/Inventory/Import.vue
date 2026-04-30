@@ -8,50 +8,50 @@ defineProps<{
     duplicateOptions: DuplicateOption[];
 }>();
 
-const { t } = useTranslation();
+const { __ } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: t('Dashboard'), href: '/dashboard' },
-    { title: t('Inventory'), href: '/dashboard/inventories' },
-    { title: t('Import'), href: '/dashboard/inventories/import' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Inventory'), href: '/dashboard/inventories' },
+    { title: __('Import'), href: '/dashboard/inventories/import' },
 ];
 
 const previewColumns: TableColumn[] = [
-    { key: 'asset_tag', label: t('Asset Tag'), minWidth: '150px' },
-    { key: 'equipment', label: t('Equipment'), minWidth: '150px' },
-    { key: 'status', label: t('Status'), minWidth: '120px' },
-    { key: 'condition', label: t('Condition'), minWidth: '120px' },
+    { key: 'asset_tag', label: __('Asset Tag'), minWidth: '150px' },
+    { key: 'equipment', label: __('Equipment'), minWidth: '150px' },
+    { key: 'status', label: __('Status'), minWidth: '120px' },
+    { key: 'condition', label: __('Condition'), minWidth: '120px' },
 ];
 
 const availableColumns = [
-    `${t('Asset Tag')} *`,
-    `${t('Equipment ID')} *`,
-    t('Name'),
-    t('Serial Number'),
-    `${t('Status')} *`,
-    `${t('Condition')} *`,
-    t('Classroom ID'),
-    t('Department ID'),
-    t('User ID'),
-    t('Acquisition Date'),
-    t('Acquisition Cost'),
-    t('Warranty Expiry'),
-    t('Notes'),
+    `${ __('Asset Tag')} *`,
+    `${ __('Equipment ID')} *`,
+    __('Name'),
+    __('Serial Number'),
+    `${ __('Status')} *`,
+    `${ __('Condition')} *`,
+    __('Classroom ID'),
+    __('Department ID'),
+    __('User ID'),
+    __('Acquisition Date'),
+    __('Acquisition Cost'),
+    __('Warranty Expiry'),
+    __('Notes'),
 ];
 </script>
 
 <template>
     <ImportPage
-        :title="t('Import Inventory Items')"
+        :title="__('Import Inventory Items')"
         entity-name="inventory"
-        :entity-name-plural="t('Inventory Items')"
+        :entity-name-plural="__('Inventory Items')"
         :breadcrumbs="breadcrumbs"
         :duplicate-options="duplicateOptions"
         preview-url="/dashboard/inventories/import/preview"
         import-url="/dashboard/inventories/import"
         list-url="/dashboard/inventories"
         template-url="/dashboard/inventories/template"
-        :required-fields-text="t('Asset Tag, Equipment ID, Status, and Condition are required.')"
+        :required-fields-text="__('Asset Tag, Equipment ID, Status, and Condition are required.')"
         :available-columns="availableColumns"
         :preview-columns="previewColumns"
     />

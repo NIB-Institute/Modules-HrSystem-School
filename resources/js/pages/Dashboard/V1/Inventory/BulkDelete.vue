@@ -15,7 +15,7 @@ interface BulkDeleteProps {
 }
 
 const props = defineProps<BulkDeleteProps>();
-const { t } = useTranslation();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -42,7 +42,7 @@ const canSubmit = computed(() => confirmed.value === true);
 const handleSubmit = () => {
     form.delete('/dashboard/inventories/bulk-delete', {
         onSuccess: () => {
-            toast.success(t(':count item(s) deleted successfully.', { count: props.inventories.length }));
+            toast.success(__(':count item(s) deleted successfully.', { count: props.inventories.length }));
             setTimeout(() => {
                 close();
                 redirect();
@@ -65,11 +65,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        :title="t('Delete :count Item(s)', { count: inventories.length })"
-        :description="t('This action will move the selected items to trash')"
+        :title="__('Delete :count Item(s)', { count: inventories.length })"
+        :description="__('This action will move the selected items to trash')"
         mode="delete"
         size="md"
-        :submit-text="t('Delete :count Item(s)', { count: inventories.length })"
+        :submit-text="__('Delete :count Item(s)', { count: inventories.length })"
         :loading="form.processing"
         :disabled="!canSubmit"
         @submit="handleSubmit"
@@ -81,10 +81,10 @@ const handleCancel = () => {
                 <AlertTriangle class="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
                 <div class="space-y-1">
                     <p class="text-sm font-medium text-destructive">
-                        {{ t('You are about to delete :count item(s)', { count: inventories.length }) }}
+                        {{ __('You are about to delete :count item(s)', { count: inventories.length }) }}
                     </p>
                     <p class="text-sm text-muted-foreground">
-                        {{ t('These items will be moved to trash. They can be restored within 30 days.') }}
+                        {{ __('These items will be moved to trash. They can be restored within 30 days.') }}
                     </p>
                 </div>
             </div>
@@ -92,7 +92,7 @@ const handleCancel = () => {
             <!-- Items List -->
             <div class="space-y-2">
                 <p class="text-sm font-medium text-muted-foreground">
-                    {{ t('The following items will be deleted:') }}
+                    {{ __('The following items will be deleted:') }}
                 </p>
                 <div class="max-h-64 space-y-1.5 overflow-y-auto rounded-md border p-3">
                     <div
@@ -119,10 +119,10 @@ const handleCancel = () => {
                 />
                 <div class="space-y-1">
                     <Label for="bulk-confirmed" class="cursor-pointer font-medium">
-                        {{ t('I confirm this bulk deletion') }}
+                        {{ __('I confirm this bulk deletion') }}
                     </Label>
                     <p class="text-sm text-muted-foreground">
-                        {{ t('I understand that :count item(s) will be deleted.', { count: inventories.length }) }}
+                        {{ __('I understand that :count item(s) will be deleted.', { count: inventories.length }) }}
                     </p>
                 </div>
             </div>

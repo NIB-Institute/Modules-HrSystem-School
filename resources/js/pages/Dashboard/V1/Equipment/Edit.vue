@@ -5,9 +5,11 @@ import { useForm } from '@inertiajs/vue3';
 import { useModal } from 'momentum-modal';
 import { computed } from 'vue';
 import { toast } from 'vue-sonner';
-import type { EquipmentFormData, EquipmentEditProps, EquipmentCategory } from '@school/types';
+import type { EquipmentFormData, EquipmentEditProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<EquipmentEditProps>();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -39,7 +41,7 @@ const isFormInvalid = computed(() => {
 const handleSubmit = () => {
     form.put(`/dashboard/equipment/${props.equipment.uuid}`, {
         onSuccess: () => {
-            toast.success('Equipment updated successfully.');
+            toast.success(__('Equipment updated successfully.'));
             setTimeout(() => {
                 close();
                 redirect();
@@ -58,11 +60,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Edit Equipment"
-        :description="`Editing: ${equipment.name}`"
+        :title="__('Edit Equipment')"
+        :description="__('Editing: :name', { name: equipment.name })"
         mode="edit"
         size="md"
-        submit-text="Save Changes"
+        :submit-text="__('Save Changes')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

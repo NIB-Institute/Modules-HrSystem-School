@@ -7,12 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Pencil, Trash2, Monitor, Armchair, ShieldCheck, Accessibility, Wrench } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { EquipmentShowProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<EquipmentShowProps>();
+const { __ } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Equipment', href: '/dashboard/equipment' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Equipment'), href: '/dashboard/equipment' },
     { title: props.equipment.name, href: `/dashboard/equipment/${props.equipment.uuid}` },
 ];
 
@@ -68,11 +70,11 @@ const getCategoryIcon = (category: string) => {
                 <div class="flex gap-2">
                     <Button variant="outline" @click="handleEdit">
                         <Pencil class="mr-2 h-4 w-4" />
-                        Edit
+                        {{ __('Edit') }}
                     </Button>
                     <Button variant="destructive" @click="handleDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Delete
+                        {{ __('Delete') }}
                     </Button>
                 </div>
             </div>
@@ -82,29 +84,29 @@ const getCategoryIcon = (category: string) => {
                 <!-- Details -->
                 <Card>
                     <CardHeader>
-                        <CardTitle>Details</CardTitle>
+                        <CardTitle>{{ __('Details') }}</CardTitle>
                     </CardHeader>
                     <CardContent class="space-y-4">
                         <div class="flex justify-between">
-                            <span class="text-muted-foreground">Name</span>
+                            <span class="text-muted-foreground">{{ __('Name') }}</span>
                             <span class="font-medium">{{ equipment.name }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-muted-foreground">Slug</span>
+                            <span class="text-muted-foreground">{{ __('Slug') }}</span>
                             <span class="font-medium">{{ equipment.slug }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-muted-foreground">Category</span>
+                            <span class="text-muted-foreground">{{ __('Category') }}</span>
                             <Badge>{{ equipment.category_label }}</Badge>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-muted-foreground">Status</span>
+                            <span class="text-muted-foreground">{{ __('Status') }}</span>
                             <Badge :variant="equipment.status ? 'default' : 'secondary'">
-                                {{ equipment.status ? 'Active' : 'Inactive' }}
+                                {{ equipment.status ? __('Active') : __('Inactive') }}
                             </Badge>
                         </div>
                         <div v-if="equipment.icon" class="flex justify-between">
-                            <span class="text-muted-foreground">Icon</span>
+                            <span class="text-muted-foreground">{{ __('Icon') }}</span>
                             <span class="font-medium">{{ equipment.icon }}</span>
                         </div>
                     </CardContent>
@@ -113,11 +115,11 @@ const getCategoryIcon = (category: string) => {
                 <!-- Usage Stats -->
                 <Card>
                     <CardHeader>
-                        <CardTitle>Usage</CardTitle>
+                        <CardTitle>{{ __('Usage') }}</CardTitle>
                     </CardHeader>
                     <CardContent class="space-y-4">
                         <div class="flex justify-between">
-                            <span class="text-muted-foreground">Used in Classrooms</span>
+                            <span class="text-muted-foreground">{{ __('Used in Classrooms') }}</span>
                             <span class="font-medium">{{ equipment.classrooms_count || 0 }}</span>
                         </div>
                     </CardContent>
@@ -127,7 +129,7 @@ const getCategoryIcon = (category: string) => {
             <!-- Description -->
             <Card v-if="equipment.description">
                 <CardHeader>
-                    <CardTitle>Description</CardTitle>
+                    <CardTitle>{{ __('Description') }}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p class="text-muted-foreground">{{ equipment.description }}</p>

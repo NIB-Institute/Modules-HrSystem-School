@@ -9,7 +9,7 @@ import type { InventoryFormData, InventoryEditProps } from '@school/types';
 import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<InventoryEditProps>();
-const { t } = useTranslation();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -49,7 +49,7 @@ const isFormInvalid = computed(() => !form.asset_tag || !form.equipment_id);
 const handleSubmit = () => {
     form.put(`/dashboard/inventories/${props.inventory.uuid}`, {
         onSuccess: () => {
-            toast.success(t('Item updated successfully.'));
+            toast.success(__('Item updated successfully.'));
             setTimeout(() => {
                 close();
                 redirect();
@@ -67,11 +67,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        :title="t('Edit Inventory Item')"
-        :description="t('Editing asset tag: :tag', { tag: inventory.asset_tag })"
+        :title="__('Edit Inventory Item')"
+        :description="__('Editing asset tag: :tag', { tag: inventory.asset_tag })"
         mode="edit"
         size="lg"
-        :submit-text="t('Save Changes')"
+        :submit-text="__('Save Changes')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

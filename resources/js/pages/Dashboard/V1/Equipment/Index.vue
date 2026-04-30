@@ -17,12 +17,14 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Wrench, CheckCircle, Search, Eye, Pencil, Trash2, Monitor, Armchair, ShieldCheck, Accessibility, Download, Upload, FileSpreadsheet, Database } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { EquipmentIndexProps, Equipment } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<EquipmentIndexProps>();
+const { __ } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Equipment', href: '/dashboard/equipment' },
+    { title: __('Dashboard'), href: '/dashboard' },
+    { title: __('Equipment'), href: '/dashboard/equipment' },
 ];
 
 const search = ref(props.filters.search || '');
@@ -44,39 +46,39 @@ const openBulkDeleteDialog = () => {
 const columns: TableColumn<Equipment>[] = [
     {
         key: 'name',
-        label: 'Name',
+        label: __('Name'),
         render: (equipment) => equipment.name,
     },
     {
         key: 'category',
-        label: 'Category',
+        label: __('Category'),
         render: (equipment) => equipment.category_label,
     },
     {
         key: 'classrooms_count',
-        label: 'Used In',
-        render: (equipment) => `${equipment.classrooms_count || 0} classrooms`,
+        label: __('Used In'),
+        render: (equipment) => `${equipment.classrooms_count || 0} ${__('classrooms')}`,
     },
     {
         key: 'status',
-        label: 'Status',
-        render: (equipment) => equipment.status ? 'Active' : 'Inactive',
+        label: __('Status'),
+        render: (equipment) => equipment.status ? __('Active') : __('Inactive'),
     },
 ];
 
 const actions: TableAction<Equipment>[] = [
     {
-        label: 'View',
+        label: __('View'),
         icon: Eye,
         onClick: (equipment) => router.visit(`/dashboard/equipment/${equipment.uuid}`),
     },
     {
-        label: 'Edit',
+        label: __('Edit'),
         icon: Pencil,
         onClick: (equipment) => router.visit(`/dashboard/equipment/${equipment.uuid}/edit`),
     },
     {
-        label: 'Delete',
+        label: __('Delete'),
         icon: Trash2,
         onClick: (equipment) => router.visit(`/dashboard/equipment/${equipment.uuid}/delete`),
         variant: 'destructive',
@@ -124,8 +126,6 @@ const handleCreate = () => {
     router.visit('/dashboard/equipment/create');
 };
 
-// Open the column-selectable export/template modal (shared
-// /resources/js/pages/shared/ResourceExportPage.vue).
 const handleExport = () => {
     router.visit('/dashboard/equipment/export-options');
 };
@@ -182,24 +182,24 @@ const getCategoryVariant = (category: string) => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Equipment" />
+        <Head :title="__('Equipment')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-3">
                 <StatsCard
-                    title="Total Equipment"
+                    :title="__('Total Equipment')"
                     :value="props.stats.total"
                     :icon="Wrench"
                 />
                 <StatsCard
-                    title="Active"
+                    :title="__('Active')"
                     :value="props.stats.active"
                     :icon="CheckCircle"
                     variant="success"
                 />
                 <StatsCard
-                    title="Technology"
+                    :title="__('Technology')"
                     :value="props.stats.by_category.technology"
                     :icon="Monitor"
                 />
@@ -209,37 +209,37 @@ const getCategoryVariant = (category: string) => {
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-semibold">Equipment</h2>
-                        <p class="text-sm text-muted-foreground">Manage classroom equipment and amenities</p>
+                        <h2 class="text-lg font-semibold">{{ __('Equipment') }}</h2>
+                        <p class="text-sm text-muted-foreground">{{ __('Manage classroom equipment and amenities') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
                             <Button variant="default">
                                 <Database class="mr-2 h-4 w-4" />
-                                All
+                                {{ __('All') }}
                             </Button>
                             <Button variant="outline" @click="handleTrash">
                                 <Trash2 class="mr-2 h-4 w-4" />
-                                Trash
+                                {{ __('Trash') }}
                             </Button>
                         </ButtonGroup>
                         <ButtonGroup>
                             <Button variant="outline" @click="handleExport">
                                 <Download class="mr-2 h-4 w-4" />
-                                Export
+                                {{ __('Export') }}
                             </Button>
                             <Button variant="outline" @click="handleImport">
                                 <Upload class="mr-2 h-4 w-4" />
-                                Import
+                                {{ __('Import') }}
                             </Button>
                             <Button variant="outline" @click="handleDownloadTemplate">
                                 <FileSpreadsheet class="mr-2 h-4 w-4" />
-                                Template
+                                {{ __('Template') }}
                             </Button>
                         </ButtonGroup>
                         <Button @click="handleCreate">
                             <Plus class="mr-2 h-4 w-4" />
-                            Add Equipment
+                            {{ __('Add Equipment') }}
                         </Button>
                     </div>
                 </div>
@@ -250,17 +250,17 @@ const getCategoryVariant = (category: string) => {
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             v-model="search"
-                            placeholder="Search equipment..."
+                            :placeholder="__('Search equipment...')"
                             class="pl-9"
                             @keyup.enter="handleSearch"
                         />
                     </div>
                     <Select v-model="categoryFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Category" />
+                            <SelectValue :placeholder="__('Category')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Categories</SelectItem>
+                            <SelectItem value="all">{{ __('All Categories') }}</SelectItem>
                             <SelectItem v-for="cat in categoryOptions" :key="cat.value" :value="cat.value">
                                 {{ cat.label }}
                             </SelectItem>
@@ -268,12 +268,12 @@ const getCategoryVariant = (category: string) => {
                     </Select>
                     <Select v-model="statusFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Status" />
+                            <SelectValue :placeholder="__('Status')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="1">Active</SelectItem>
-                            <SelectItem value="0">Inactive</SelectItem>
+                            <SelectItem value="all">{{ __('All Status') }}</SelectItem>
+                            <SelectItem value="1">{{ __('Active') }}</SelectItem>
+                            <SelectItem value="0">{{ __('Inactive') }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -294,7 +294,7 @@ const getCategoryVariant = (category: string) => {
                     <template #bulk-actions>
                         <Button variant="destructive" size="sm" @click="openBulkDeleteDialog">
                             <Trash2 class="mr-2 h-4 w-4" />
-                            Delete Selected
+                            {{ __('Delete Selected') }}
                         </Button>
                     </template>
                     <template #cell-name="{ item }">
@@ -315,7 +315,7 @@ const getCategoryVariant = (category: string) => {
                     </template>
                     <template #cell-status="{ item }">
                         <Badge :variant="item.status ? 'default' : 'secondary'">
-                            {{ item.status ? 'Active' : 'Inactive' }}
+                            {{ item.status ? __('Active') : __('Inactive') }}
                         </Badge>
                     </template>
                 </TableReusable>

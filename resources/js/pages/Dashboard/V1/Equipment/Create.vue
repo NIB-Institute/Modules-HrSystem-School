@@ -5,9 +5,11 @@ import { useForm } from '@inertiajs/vue3';
 import { useModal } from 'momentum-modal';
 import { computed } from 'vue';
 import { toast } from 'vue-sonner';
-import type { EquipmentFormData, EquipmentCreateProps, EquipmentCategory } from '@school/types';
+import type { EquipmentFormData, EquipmentCreateProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<EquipmentCreateProps>();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -39,7 +41,7 @@ const isFormInvalid = computed(() => {
 const handleSubmit = () => {
     form.post('/dashboard/equipment', {
         onSuccess: () => {
-            toast.success('Equipment created successfully.');
+            toast.success(__('Equipment created successfully.'));
             setTimeout(() => {
                 close();
                 redirect();
@@ -58,11 +60,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Create Equipment"
-        description="Add new equipment type for classrooms"
+        :title="__('Create Equipment')"
+        :description="__('Add new equipment type for classrooms')"
         mode="create"
         size="md"
-        submit-text="Create Equipment"
+        :submit-text="__('Create Equipment')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

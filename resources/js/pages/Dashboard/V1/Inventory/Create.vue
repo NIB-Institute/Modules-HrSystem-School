@@ -9,7 +9,7 @@ import type { InventoryCreateProps, InventoryFormData } from '@school/types';
 import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<InventoryCreateProps>();
-const { t } = useTranslation();
+const { __ } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -47,7 +47,7 @@ const isFormInvalid = computed(() => !form.asset_tag || !form.equipment_id);
 const handleSubmit = () => {
     form.post('/dashboard/inventories', {
         onSuccess: () => {
-            toast.success(t('Item created successfully.'));
+            toast.success(__('Item created successfully.'));
             setTimeout(() => {
                 close();
                 redirect();
@@ -65,11 +65,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        :title="t('Add Inventory Item')"
-        :description="t('Add a new physical asset to inventory')"
+        :title="__('Add Inventory Item')"
+        :description="__('Add a new physical asset to inventory')"
         mode="create"
         size="lg"
-        :submit-text="t('Add Item')"
+        :submit-text="__('Add Item')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"
