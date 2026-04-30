@@ -8,8 +8,10 @@ import { toast } from 'vue-sonner';
 import { classroomSchema } from '@school/validation/classroomSchema';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { ClassroomFormData, ClassroomCreateProps, ClassroomType } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<ClassroomCreateProps>();
+const { t } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -76,7 +78,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.post('/dashboard/classrooms', {
             onSuccess: () => {
-                toast.success('Classroom created successfully.');
+                toast.success(t('Classroom created successfully.'));
                 setTimeout(() => {
                     close();
                     redirect();
@@ -96,11 +98,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Create Classroom"
-        description="Add a new classroom or facility"
+        :title="t('Create Classroom')"
+        :description="t('Add a new classroom or facility')"
         mode="create"
         size="lg"
-        submit-text="Create Classroom"
+        :submit-text="t('Create Classroom')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

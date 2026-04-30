@@ -18,12 +18,14 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, GraduationCap, CheckCircle, XCircle, Search, Eye, Pencil, Trash2, Building2, Database } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { SchoolIndexProps, School } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<SchoolIndexProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Schools', href: '/dashboard/schools' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Schools'), href: '/dashboard/schools' },
 ];
 
 const search = ref(props.filters.search || '');
@@ -33,44 +35,44 @@ const typeFilter = ref(props.filters.type || 'all');
 const columns: TableColumn<School>[] = [
     {
         key: 'name',
-        label: 'Name',
+        label: t('Name'),
         render: (school) => school.name,
     },
     {
         key: 'code',
-        label: 'Code',
+        label: t('Code'),
         render: (school) => school.code || '-',
     },
     {
         key: 'type',
-        label: 'Type',
+        label: t('Type'),
         render: (school) => school.type_label,
     },
     {
         key: 'city',
-        label: 'Location',
+        label: t('Location'),
         render: (school) => school.city || '-',
     },
     {
         key: 'status',
-        label: 'Status',
-        render: (school) => school.status ? 'Active' : 'Inactive',
+        label: t('Status'),
+        render: (school) => school.status ? t('Active') : t('Inactive'),
     },
 ];
 
 const actions: TableAction<School>[] = [
     {
-        label: 'View',
+        label: t('View'),
         icon: Eye,
         onClick: (school) => router.visit(`/dashboard/schools/${school.uuid}`),
     },
     {
-        label: 'Edit',
+        label: t('Edit'),
         icon: Pencil,
         onClick: (school) => router.visit(`/dashboard/schools/${school.uuid}/edit`),
     },
     {
-        label: 'Delete',
+        label: t('Delete'),
         icon: Trash2,
         onClick: (school) => router.visit(`/dashboard/schools/${school.uuid}/delete`),
         variant: 'destructive',
@@ -141,24 +143,24 @@ const typeOptions = computed(() => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Schools" />
+        <Head :title="t('Schools')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-3">
                 <StatsCard
-                    title="Total Schools"
+                    :title="t('Total Schools')"
                     :value="props.stats.total"
                     :icon="GraduationCap"
                 />
                 <StatsCard
-                    title="Active"
+                    :title="t('Active')"
                     :value="props.stats.active"
                     :icon="CheckCircle"
                     variant="success"
                 />
                 <StatsCard
-                    title="Inactive"
+                    :title="t('Inactive')"
                     :value="props.stats.inactive"
                     :icon="XCircle"
                     variant="warning"
@@ -169,23 +171,23 @@ const typeOptions = computed(() => {
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-semibold">Schools</h2>
-                        <p class="text-sm text-muted-foreground">Manage schools and institutions</p>
+                        <h2 class="text-lg font-semibold">{{ t('Schools') }}</h2>
+                        <p class="text-sm text-muted-foreground">{{ t('Manage schools and institutions') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
                             <Button variant="default">
                                 <Database class="mr-2 h-4 w-4" />
-                                All
+                                {{ t('All') }}
                             </Button>
                             <Button variant="outline" @click="handleTrash">
                                 <Trash2 class="mr-2 h-4 w-4" />
-                                Trash
+                                {{ t('Trash') }}
                             </Button>
                         </ButtonGroup>
                         <Button @click="handleCreate">
                             <Plus class="mr-2 h-4 w-4" />
-                            Add School
+                            {{ t('Add School') }}
                         </Button>
                     </div>
                 </div>
@@ -196,17 +198,17 @@ const typeOptions = computed(() => {
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             v-model="search"
-                            placeholder="Search schools..."
+                            :placeholder="t('Search schools...')"
                             class="pl-9"
                             @keyup.enter="handleSearch"
                         />
                     </div>
                     <Select v-model="typeFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Type" />
+                            <SelectValue :placeholder="t('Type')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Types</SelectItem>
+                            <SelectItem value="all">{{ t('All Types') }}</SelectItem>
                             <SelectItem v-for="type in typeOptions" :key="type.value" :value="type.value">
                                 {{ type.label }}
                             </SelectItem>
@@ -214,12 +216,12 @@ const typeOptions = computed(() => {
                     </Select>
                     <Select v-model="statusFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Status" />
+                            <SelectValue :placeholder="t('Status')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="1">Active</SelectItem>
-                            <SelectItem value="0">Inactive</SelectItem>
+                            <SelectItem value="all">{{ t('All Status') }}</SelectItem>
+                            <SelectItem value="1">{{ t('Active') }}</SelectItem>
+                            <SelectItem value="0">{{ t('Inactive') }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -259,7 +261,7 @@ const typeOptions = computed(() => {
                                 @update:model-value="handleStatusToggle(item, $event)"
                             />
                             <span class="text-sm text-muted-foreground">
-                                {{ item.status ? 'Active' : 'Inactive' }}
+                                {{ item.status ? t('Active') : t('Inactive') }}
                             </span>
                         </div>
                     </template>

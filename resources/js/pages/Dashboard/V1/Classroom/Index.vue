@@ -18,12 +18,14 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, DoorOpen, CheckCircle, XCircle, Search, Eye, Pencil, Trash2, Users, Building, Download, Upload, FileSpreadsheet, Database } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { ClassroomIndexProps, Classroom } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<ClassroomIndexProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Classrooms', href: '/dashboard/classrooms' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Classrooms'), href: '/dashboard/classrooms' },
 ];
 
 const search = ref(props.filters.search || '');
@@ -46,49 +48,49 @@ const openBulkDeleteDialog = () => {
 const columns: TableColumn<Classroom>[] = [
     {
         key: 'name',
-        label: 'Name',
+        label: t('Name'),
         render: (classroom) => classroom.name,
     },
     {
         key: 'code',
-        label: 'Code',
+        label: t('Code'),
         render: (classroom) => classroom.code || '-',
     },
     {
         key: 'type',
-        label: 'Type',
+        label: t('Type'),
         render: (classroom) => classroom.type_label,
     },
     {
         key: 'department_name',
-        label: 'Department',
+        label: t('Department'),
         render: (classroom) => classroom.department_name || '-',
     },
     {
         key: 'capacity',
-        label: 'Capacity',
+        label: t('Capacity'),
         render: (classroom) => classroom.capacity?.toString() || '-',
     },
     {
         key: 'status',
-        label: 'Status',
-        render: (classroom) => classroom.status ? 'Active' : 'Inactive',
+        label: t('Status'),
+        render: (classroom) => classroom.status ? t('Active') : t('Inactive'),
     },
 ];
 
 const actions: TableAction<Classroom>[] = [
     {
-        label: 'View',
+        label: t('View'),
         icon: Eye,
         onClick: (classroom) => router.visit(`/dashboard/classrooms/${classroom.uuid}`),
     },
     {
-        label: 'Edit',
+        label: t('Edit'),
         icon: Pencil,
         onClick: (classroom) => router.visit(`/dashboard/classrooms/${classroom.uuid}/edit`),
     },
     {
-        label: 'Delete',
+        label: t('Delete'),
         icon: Trash2,
         onClick: (classroom) => router.visit(`/dashboard/classrooms/${classroom.uuid}/delete`),
         variant: 'destructive',
@@ -174,30 +176,30 @@ const typeOptions = computed(() => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Classrooms" />
+        <Head :title="t('Classrooms')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-4">
                 <StatsCard
-                    title="Total Classrooms"
+                    :title="t('Total Classrooms')"
                     :value="props.stats.total"
                     :icon="DoorOpen"
                 />
                 <StatsCard
-                    title="Active"
+                    :title="t('Active')"
                     :value="props.stats.active"
                     :icon="CheckCircle"
                     variant="success"
                 />
                 <StatsCard
-                    title="Available"
+                    :title="t('Available')"
                     :value="props.stats.available"
                     :icon="Users"
                     variant="info"
                 />
                 <StatsCard
-                    title="Labs"
+                    :title="t('Labs')"
                     :value="props.stats.by_type?.lab || 0"
                     :icon="Building"
                 />
@@ -207,37 +209,37 @@ const typeOptions = computed(() => {
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-semibold">Classrooms</h2>
-                        <p class="text-sm text-muted-foreground">Manage classrooms and facilities</p>
+                        <h2 class="text-lg font-semibold">{{ t('Classrooms') }}</h2>
+                        <p class="text-sm text-muted-foreground">{{ t('Manage classrooms and facilities') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
                             <Button variant="default">
                                 <Database class="mr-2 h-4 w-4" />
-                                All
+                                {{ t('All') }}
                             </Button>
                             <Button variant="outline" @click="handleTrash">
                                 <Trash2 class="mr-2 h-4 w-4" />
-                                Trash
+                                {{ t('Trash') }}
                             </Button>
                         </ButtonGroup>
                         <ButtonGroup>
                             <Button variant="outline" @click="handleExport">
                                 <Download class="mr-2 h-4 w-4" />
-                                Export
+                                {{ t('Export') }}
                             </Button>
                             <Button variant="outline" @click="handleImport">
                                 <Upload class="mr-2 h-4 w-4" />
-                                Import
+                                {{ t('Import') }}
                             </Button>
                             <Button variant="outline" @click="handleDownloadTemplate">
                                 <FileSpreadsheet class="mr-2 h-4 w-4" />
-                                Template
+                                {{ t('Template') }}
                             </Button>
                         </ButtonGroup>
                         <Button @click="handleCreate">
                             <Plus class="mr-2 h-4 w-4" />
-                            Add Classroom
+                            {{ t('Add Classroom') }}
                         </Button>
                     </div>
                 </div>
@@ -248,17 +250,17 @@ const typeOptions = computed(() => {
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             v-model="search"
-                            placeholder="Search classrooms..."
+                            :placeholder="t('Search classrooms...')"
                             class="pl-9"
                             @keyup.enter="handleSearch"
                         />
                     </div>
                     <Select v-model="departmentFilter">
                         <SelectTrigger class="w-[180px]">
-                            <SelectValue placeholder="Department" />
+                            <SelectValue :placeholder="t('Department')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Departments</SelectItem>
+                            <SelectItem value="all">{{ t('All Departments') }}</SelectItem>
                             <SelectItem v-for="dept in props.departments" :key="dept.id" :value="String(dept.id)">
                                 {{ dept.name }}
                             </SelectItem>
@@ -266,10 +268,10 @@ const typeOptions = computed(() => {
                     </Select>
                     <Select v-model="typeFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Type" />
+                            <SelectValue :placeholder="t('Type')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Types</SelectItem>
+                            <SelectItem value="all">{{ t('All Types') }}</SelectItem>
                             <SelectItem v-for="type in typeOptions" :key="type.value" :value="type.value">
                                 {{ type.label }}
                             </SelectItem>
@@ -277,12 +279,12 @@ const typeOptions = computed(() => {
                     </Select>
                     <Select v-model="statusFilter">
                         <SelectTrigger class="w-[150px]">
-                            <SelectValue placeholder="Status" />
+                            <SelectValue :placeholder="t('Status')" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="1">Active</SelectItem>
-                            <SelectItem value="0">Inactive</SelectItem>
+                            <SelectItem value="all">{{ t('All Status') }}</SelectItem>
+                            <SelectItem value="1">{{ t('Active') }}</SelectItem>
+                            <SelectItem value="0">{{ t('Inactive') }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -303,7 +305,7 @@ const typeOptions = computed(() => {
                     <template #bulk-actions>
                         <Button variant="destructive" size="sm" @click="openBulkDeleteDialog">
                             <Trash2 class="mr-2 h-4 w-4" />
-                            Delete Selected
+                            {{ t('Delete Selected') }}
                         </Button>
                     </template>
                     <template #cell-name="{ item }">
@@ -333,7 +335,7 @@ const typeOptions = computed(() => {
                                 @update:model-value="handleStatusToggle(item, $event)"
                             />
                             <span class="text-sm text-muted-foreground">
-                                {{ item.status ? 'Active' : 'Inactive' }}
+                                {{ item.status ? t('Active') : t('Inactive') }}
                             </span>
                         </div>
                     </template>

@@ -22,12 +22,14 @@ import {
 } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { SchoolShowProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<SchoolShowProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Schools', href: '/dashboard/schools' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Schools'), href: '/dashboard/schools' },
     { title: props.school.name, href: `/dashboard/schools/${props.school.uuid}` },
 ];
 
@@ -63,12 +65,12 @@ const handleDelete = () => {
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-semibold">{{ school.name }}</h1>
                                 <Badge :variant="school.status ? 'default' : 'secondary'">
-                                    {{ school.status ? 'Active' : 'Inactive' }}
+                                    {{ school.status ? t('Active') : t('Inactive') }}
                                 </Badge>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Badge variant="outline">{{ school.type_label }}</Badge>
-                                <span v-if="school.code">Code: {{ school.code }}</span>
+                                <span v-if="school.code">{{ t('Code') }}: {{ school.code }}</span>
                             </div>
                         </div>
                     </div>
@@ -76,11 +78,11 @@ const handleDelete = () => {
                 <div class="flex items-center gap-2">
                     <Button variant="outline" @click="handleEdit">
                         <Pencil class="mr-2 h-4 w-4" />
-                        Edit
+                        {{ t('Edit') }}
                     </Button>
                     <Button variant="destructive" @click="handleDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Delete
+                        {{ t('Delete') }}
                     </Button>
                 </div>
             </div>
@@ -88,22 +90,22 @@ const handleDelete = () => {
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-4">
                 <StatsCard
-                    title="Departments"
+                    :title="t('Departments')"
                     :value="stats.departments_count"
                     :icon="Building2"
                 />
                 <StatsCard
-                    title="Programs"
+                    :title="t('Programs')"
                     :value="stats.programs_count"
                     :icon="BookOpen"
                 />
                 <StatsCard
-                    title="Employees"
+                    :title="t('Employees')"
                     :value="stats.employees_count"
                     :icon="Users"
                 />
                 <StatsCard
-                    title="Courses"
+                    :title="t('Courses')"
                     :value="stats.courses_count"
                     :icon="GraduationCap"
                 />
@@ -116,7 +118,7 @@ const handleDelete = () => {
                     <!-- Description -->
                     <Card v-if="school.description">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">About</CardTitle>
+                            <CardTitle class="text-base">{{ t('About') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p class="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -128,7 +130,7 @@ const handleDelete = () => {
                     <!-- Contact Information -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Contact Information</CardTitle>
+                            <CardTitle class="text-base">{{ t('Contact Information') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div class="grid gap-4 sm:grid-cols-2">
@@ -137,7 +139,7 @@ const handleDelete = () => {
                                         <Mail class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Email</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Email') }}</p>
                                         <a :href="`mailto:${school.email}`" class="text-sm hover:underline">
                                             {{ school.email }}
                                         </a>
@@ -148,7 +150,7 @@ const handleDelete = () => {
                                         <Phone class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Phone</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Phone') }}</p>
                                         <a :href="`tel:${school.phone}`" class="text-sm hover:underline">
                                             {{ school.phone }}
                                         </a>
@@ -159,7 +161,7 @@ const handleDelete = () => {
                                         <Globe class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Website</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Website') }}</p>
                                         <a :href="school.website" target="_blank" class="text-sm hover:underline">
                                             {{ school.website }}
                                         </a>
@@ -170,7 +172,7 @@ const handleDelete = () => {
                                         <MapPin class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Location</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Location') }}</p>
                                         <p class="text-sm">
                                             {{ [school.city, school.country].filter(Boolean).join(', ') || '-' }}
                                         </p>
@@ -186,34 +188,34 @@ const handleDelete = () => {
                     <!-- Details -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Details</CardTitle>
+                            <CardTitle class="text-base">{{ t('Details') }}</CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
                             <div v-if="school.established_year" class="flex items-center gap-3">
                                 <Calendar class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Established</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Established') }}</p>
                                     <p class="text-sm font-medium">{{ school.established_year }}</p>
                                 </div>
                             </div>
                             <div v-if="school.accreditation" class="flex items-center gap-3">
                                 <Award class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Accreditation</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Accreditation') }}</p>
                                     <p class="text-sm font-medium">{{ school.accreditation }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <Users class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Total Students</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Total Students') }}</p>
                                     <p class="text-sm font-medium">{{ school.total_students }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <Users class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Total Staff</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Total Staff') }}</p>
                                     <p class="text-sm font-medium">{{ school.total_staff }}</p>
                                 </div>
                             </div>

@@ -8,8 +8,10 @@ import { toast } from 'vue-sonner';
 import { courseSchema } from '@school/validation/courseSchema';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { CourseFormData, CourseCreateProps, CourseType } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<CourseCreateProps>();
+const { t } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -80,7 +82,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.post('/dashboard/courses', {
             onSuccess: () => {
-                toast.success('Course created successfully.');
+                toast.success(t('Course created successfully.'));
                 setTimeout(() => {
                     close();
                     redirect();
@@ -100,11 +102,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Create Course"
-        description="Add a new course to the curriculum"
+        :title="t('Create Course')"
+        :description="t('Add a new course to the curriculum')"
         mode="create"
         size="lg"
-        submit-text="Create Course"
+        :submit-text="t('Create Course')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

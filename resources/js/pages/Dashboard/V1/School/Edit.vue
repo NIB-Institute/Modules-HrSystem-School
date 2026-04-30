@@ -11,14 +11,16 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import { ChevronLeft } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { SchoolFormData, SchoolEditProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<SchoolEditProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Schools', href: '/dashboard/schools' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Schools'), href: '/dashboard/schools' },
     { title: props.school.name, href: `/dashboard/schools/${props.school.uuid}` },
-    { title: 'Edit', href: `/dashboard/schools/${props.school.uuid}/edit` },
+    { title: t('Edit'), href: `/dashboard/schools/${props.school.uuid}/edit` },
 ];
 
 const form = useForm<SchoolFormData>({
@@ -80,7 +82,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.put(`/dashboard/schools/${props.school.uuid}`, {
             onSuccess: () => {
-                toast.success('School updated successfully.');
+                toast.success(t('School updated successfully.'));
                 router.visit(`/dashboard/schools/${props.school.uuid}`);
             },
         });
@@ -90,7 +92,7 @@ const handleSubmit = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head :title="`Edit ${school.name}`" />
+        <Head :title="t('Edit') + ' ' + school.name" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Header -->
@@ -99,8 +101,8 @@ const handleSubmit = () => {
                     <ChevronLeft class="h-5 w-5" />
                 </Link>
                 <div>
-                    <h1 class="text-xl font-semibold">Edit School</h1>
-                    <p class="text-sm text-muted-foreground">{{ school.name }} - {{ school.code || 'No Code' }}</p>
+                    <h1 class="text-xl font-semibold">{{ t('Edit School') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ school.name }} - {{ school.code || t('No Code') }}</p>
                 </div>
             </div>
 
@@ -115,10 +117,10 @@ const handleSubmit = () => {
                 <!-- Actions at Bottom -->
                 <div class="flex justify-end gap-3 pt-4">
                     <Button type="button" variant="outline" as-child>
-                        <Link :href="`/dashboard/schools/${school.uuid}`">Cancel</Link>
+                        <Link :href="`/dashboard/schools/${school.uuid}`">{{ t('Cancel') }}</Link>
                     </Button>
                     <Button type="submit" :disabled="isFormInvalid || form.processing">
-                        {{ form.processing ? 'Saving...' : 'Save Changes' }}
+                        {{ form.processing ? t('Saving...') : t('Save Changes') }}
                     </Button>
                 </div>
             </form>

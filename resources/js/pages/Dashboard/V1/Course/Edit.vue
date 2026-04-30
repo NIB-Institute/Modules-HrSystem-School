@@ -8,8 +8,10 @@ import { toast } from 'vue-sonner';
 import { courseSchema } from '@school/validation/courseSchema';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { CourseFormData, CourseEditProps, CourseType } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<CourseEditProps>();
+const { t } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -76,7 +78,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.put(`/dashboard/courses/${props.course.uuid}`, {
             onSuccess: () => {
-                toast.success('Course updated successfully.');
+                toast.success(t('Course updated successfully.'));
                 setTimeout(() => {
                     close();
                     redirect();
@@ -96,11 +98,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Edit Course"
-        :description="`Editing: ${course.name}`"
+        :title="t('Edit Course')"
+        :description="t('Editing:') + ' ' + course.name"
         mode="edit"
         size="lg"
-        submit-text="Save Changes"
+        :submit-text="t('Save Changes')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

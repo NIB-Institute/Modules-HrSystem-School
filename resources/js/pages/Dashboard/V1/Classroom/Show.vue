@@ -24,12 +24,14 @@ import {
 } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { ClassroomShowProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<ClassroomShowProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Classrooms', href: '/dashboard/classrooms' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Classrooms'), href: '/dashboard/classrooms' },
     { title: props.classroom.name, href: `/dashboard/classrooms/${props.classroom.uuid}` },
 ];
 
@@ -65,15 +67,15 @@ const handleQrCode = () => {
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-semibold">{{ classroom.name }}</h1>
                                 <Badge :variant="classroom.status ? 'default' : 'secondary'">
-                                    {{ classroom.status ? 'Active' : 'Inactive' }}
+                                    {{ classroom.status ? t('Active') : t('Inactive') }}
                                 </Badge>
                                 <Badge v-if="classroom.is_available" variant="outline" class="border-green-500 text-green-500">
-                                    Available
+                                    {{ t('Available') }}
                                 </Badge>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Badge variant="outline">{{ classroom.type_label }}</Badge>
-                                <span v-if="classroom.code">Code: {{ classroom.code }}</span>
+                                <span v-if="classroom.code">{{ t('Code') }}: {{ classroom.code }}</span>
                             </div>
                         </div>
                     </div>
@@ -81,15 +83,15 @@ const handleQrCode = () => {
                 <div class="flex items-center gap-2">
                     <Button variant="outline" @click="handleQrCode">
                         <QrCode class="mr-2 h-4 w-4" />
-                        Generate QR
+                        {{ t('Generate QR') }}
                     </Button>
                     <Button variant="outline" @click="handleEdit">
                         <Pencil class="mr-2 h-4 w-4" />
-                        Edit
+                        {{ t('Edit') }}
                     </Button>
                     <Button variant="destructive" @click="handleDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Delete
+                        {{ t('Delete') }}
                     </Button>
                 </div>
             </div>
@@ -97,27 +99,27 @@ const handleQrCode = () => {
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-5">
                 <StatsCard
-                    title="Capacity"
+                    :title="t('Capacity')"
                     :value="stats.capacity"
                     :icon="Users"
                 />
                 <StatsCard
-                    title="Courses"
+                    :title="t('Courses')"
                     :value="stats.courses_count"
                     :icon="BookOpen"
                 />
                 <StatsCard
-                    title="Equipment"
+                    :title="t('Equipment')"
                     :value="stats.equipment_count"
                     :icon="Package"
                 />
                 <StatsCard
-                    title="Floor"
+                    :title="t('Floor')"
                     :value="classroom.floor || 'N/A'"
                     :icon="Building"
                 />
                 <StatsCard
-                    title="Building"
+                    :title="t('Building')"
                     :value="classroom.building || 'N/A'"
                     :icon="MapPin"
                 />
@@ -130,7 +132,7 @@ const handleQrCode = () => {
                     <!-- Description -->
                     <Card v-if="classroom.description">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">About</CardTitle>
+                            <CardTitle class="text-base">{{ t('About') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p class="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -142,7 +144,7 @@ const handleQrCode = () => {
                     <!-- Location Information -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Location Information</CardTitle>
+                            <CardTitle class="text-base">{{ t('Location Information') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div class="grid gap-4 sm:grid-cols-2">
@@ -151,7 +153,7 @@ const handleQrCode = () => {
                                         <Building class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">School</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('School') }}</p>
                                         <p class="text-sm font-medium">{{ classroom.school_name }}</p>
                                     </div>
                                 </div>
@@ -160,7 +162,7 @@ const handleQrCode = () => {
                                         <MapPin class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Building</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Building') }}</p>
                                         <p class="text-sm font-medium">{{ classroom.building }}</p>
                                     </div>
                                 </div>
@@ -169,8 +171,8 @@ const handleQrCode = () => {
                                         <Building class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Floor</p>
-                                        <p class="text-sm font-medium">Floor {{ classroom.floor }}</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Floor') }}</p>
+                                        <p class="text-sm font-medium">{{ t('Floor') }} {{ classroom.floor }}</p>
                                     </div>
                                 </div>
                                 <div v-if="classroom.full_location" class="flex items-center gap-3">
@@ -178,7 +180,7 @@ const handleQrCode = () => {
                                         <MapPin class="h-5 w-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <p class="text-xs text-muted-foreground">Full Location</p>
+                                        <p class="text-xs text-muted-foreground">{{ t('Full Location') }}</p>
                                         <p class="text-sm font-medium">{{ classroom.full_location }}</p>
                                     </div>
                                 </div>
@@ -191,7 +193,7 @@ const handleQrCode = () => {
                         <CardHeader class="pb-3">
                             <CardTitle class="text-base flex items-center gap-2">
                                 <Package class="h-4 w-4" />
-                                Equipment ({{ classroom.equipment_items.length }})
+                                {{ t('Equipment') }} ({{ classroom.equipment_items.length }})
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -211,7 +213,7 @@ const handleQrCode = () => {
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <Badge variant="secondary">Qty: {{ item.quantity }}</Badge>
+                                        <Badge variant="secondary">{{ t('Qty') }}: {{ item.quantity }}</Badge>
                                         <p v-if="item.value" class="text-xs text-muted-foreground mt-1">{{ item.value }}</p>
                                     </div>
                                 </div>
@@ -222,7 +224,7 @@ const handleQrCode = () => {
                     <!-- Legacy Equipment (string array) -->
                     <Card v-if="classroom.equipment && classroom.equipment.length > 0">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Additional Equipment</CardTitle>
+                            <CardTitle class="text-base">{{ t('Additional Equipment') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div class="flex flex-wrap gap-2">
@@ -239,13 +241,13 @@ const handleQrCode = () => {
                     <!-- Amenities -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Amenities</CardTitle>
+                            <CardTitle class="text-base">{{ t('Amenities') }}</CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
                             <div class="flex items-center gap-3">
                                 <Monitor class="h-4 w-4 text-muted-foreground" />
                                 <div class="flex-1">
-                                    <p class="text-sm">Projector</p>
+                                    <p class="text-sm">{{ t('Projector') }}</p>
                                 </div>
                                 <CheckCircle v-if="classroom.has_projector" class="h-4 w-4 text-green-500" />
                                 <XCircle v-else class="h-4 w-4 text-muted-foreground" />
@@ -253,7 +255,7 @@ const handleQrCode = () => {
                             <div class="flex items-center gap-3">
                                 <ClipboardList class="h-4 w-4 text-muted-foreground" />
                                 <div class="flex-1">
-                                    <p class="text-sm">Whiteboard</p>
+                                    <p class="text-sm">{{ t('Whiteboard') }}</p>
                                 </div>
                                 <CheckCircle v-if="classroom.has_whiteboard" class="h-4 w-4 text-green-500" />
                                 <XCircle v-else class="h-4 w-4 text-muted-foreground" />
@@ -261,7 +263,7 @@ const handleQrCode = () => {
                             <div class="flex items-center gap-3">
                                 <Snowflake class="h-4 w-4 text-muted-foreground" />
                                 <div class="flex-1">
-                                    <p class="text-sm">Air Conditioning</p>
+                                    <p class="text-sm">{{ t('Air Conditioning') }}</p>
                                 </div>
                                 <CheckCircle v-if="classroom.has_ac" class="h-4 w-4 text-green-500" />
                                 <XCircle v-else class="h-4 w-4 text-muted-foreground" />
@@ -272,28 +274,28 @@ const handleQrCode = () => {
                     <!-- Details -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Details</CardTitle>
+                            <CardTitle class="text-base">{{ t('Details') }}</CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
                             <div class="flex items-center gap-3">
                                 <Users class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Capacity</p>
-                                    <p class="text-sm font-medium">{{ classroom.capacity }} seats</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Capacity') }}</p>
+                                    <p class="text-sm font-medium">{{ classroom.capacity }} {{ t('seats') }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <DoorOpen class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Type</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Type') }}</p>
                                     <p class="text-sm font-medium">{{ classroom.type_label }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <BookOpen class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Courses</p>
-                                    <p class="text-sm font-medium">{{ stats.courses_count }} course(s)</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Courses') }}</p>
+                                    <p class="text-sm font-medium">{{ stats.courses_count }} {{ t('course(s)') }}</p>
                                 </div>
                             </div>
                         </CardContent>

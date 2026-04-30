@@ -7,6 +7,7 @@ import { ArrowLeft, Printer, Download, FileDown, QrCode as QrCodeIcon, DoorOpen 
 import type { BreadcrumbItem } from '@/types';
 import { onMounted, ref } from 'vue';
 import QRCode from 'qrcode';
+import { useTranslation } from '@/composables/useTranslation';
 
 interface Props {
     classroom: {
@@ -24,12 +25,13 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Classrooms', href: '/dashboard/classrooms' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Classrooms'), href: '/dashboard/classrooms' },
     { title: props.classroom.name, href: `/dashboard/classrooms/${props.classroom.uuid}` },
-    { title: 'QR Code', href: `/dashboard/classrooms/${props.classroom.uuid}/qr-code` },
+    { title: t('QR Code'), href: `/dashboard/classrooms/${props.classroom.uuid}/qr-code` },
 ];
 
 const qrCodeDataUrl = ref<string>('');
@@ -70,7 +72,7 @@ const handlePrint = () => {
             <!DOCTYPE html>
             <html>
             <head>
-                <title>QR Code - ${props.classroom.name}</title>
+                <title>${t('QR Code')} - ${props.classroom.name}</title>
                 <style>
                     body {
                         font-family: Arial, sans-serif;
@@ -137,9 +139,9 @@ const handlePrint = () => {
                     <div class="subtitle">${props.classroom.department_name || ''} - ${props.classroom.school_name || ''}</div>
                     <div class="qr-code">${qrCodeSvg.value}</div>
                     <div class="instruction">
-                        Scan this QR code to record your attendance
+                        ${t('Scan this QR code to record your attendance')}
                     </div>
-                    <div class="code">Room Code: ${props.classroom.code || 'N/A'}</div>
+                    <div class="code">${t('Room Code')}: ${props.classroom.code || 'N/A'}</div>
                 </div>
                 ${scriptTag}
             </body>
@@ -165,7 +167,7 @@ const handleExportPdf = () => {
             <!DOCTYPE html>
             <html>
             <head>
-                <title>QR Code - ${props.classroom.name}</title>
+                <title>${t('QR Code')} - ${props.classroom.name}</title>
                 <style>
                     @page {
                         size: A4;
@@ -240,10 +242,10 @@ const handleExportPdf = () => {
                         <img src="${qrCodeDataUrl.value}" alt="QR Code" />
                     </div>
                     <div class="instruction">
-                        Scan this QR code to record your attendance
+                        ${t('Scan this QR code to record your attendance')}
                     </div>
-                    <div class="code">Room Code: ${props.classroom.code || 'N/A'}</div>
-                    <div class="footer">Generated on ${new Date().toLocaleDateString()}</div>
+                    <div class="code">${t('Room Code')}: ${props.classroom.code || 'N/A'}</div>
+                    <div class="footer">${t('Generated on')} ${new Date().toLocaleDateString()}</div>
                 </div>
             </body>
             </html>
@@ -260,7 +262,7 @@ const handleExportPdf = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head :title="`QR Code - ${classroom.name}`" />
+        <Head :title="t('QR Code - :name', { name: classroom.name })" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Header -->
@@ -270,9 +272,9 @@ const handleExportPdf = () => {
                         <ArrowLeft class="h-4 w-4" />
                     </Button>
                     <div>
-                        <h1 class="text-2xl font-bold">Classroom QR Code</h1>
+                        <h1 class="text-2xl font-bold">{{ t('Classroom QR Code') }}</h1>
                         <p class="text-sm text-muted-foreground">
-                            Print and place inside classroom for attendance tracking
+                            {{ t('Print and place inside classroom for attendance tracking') }}
                         </p>
                     </div>
                 </div>
@@ -317,26 +319,26 @@ const handleExportPdf = () => {
                                 class="h-64 w-64"
                             />
                             <div v-else class="flex h-64 w-64 items-center justify-center">
-                                <span class="text-muted-foreground">Generating QR Code...</span>
+                                <span class="text-muted-foreground">{{ t('Generating QR Code...') }}</span>
                             </div>
                         </div>
 
                         <!-- Instructions -->
                         <div class="rounded-lg bg-muted p-4 text-center">
-                            <p class="text-sm font-medium">How to use:</p>
+                            <p class="text-sm font-medium">{{ t('How to use:') }}</p>
                             <ol class="mt-2 text-sm text-muted-foreground text-left list-decimal list-inside space-y-1">
-                                <li>Print this QR code</li>
-                                <li>Place inside the classroom (near entrance)</li>
-                                <li>Students/employees scan when entering</li>
-                                <li>Attendance is automatically recorded</li>
+                                <li>{{ t('Print this QR code') }}</li>
+                                <li>{{ t('Place inside the classroom (near entrance)') }}</li>
+                                <li>{{ t('Students/employees scan when entering') }}</li>
+                                <li>{{ t('Attendance is automatically recorded') }}</li>
                             </ol>
                         </div>
 
                         <!-- Classroom Info -->
                         <div class="text-center text-sm text-muted-foreground">
-                            <p v-if="classroom.code">Room Code: {{ classroom.code }}</p>
-                            <p v-if="classroom.building">Building: {{ classroom.building }}</p>
-                            <p v-if="classroom.floor">Floor: {{ classroom.floor }}</p>
+                            <p v-if="classroom.code">{{ t('Room Code') }}: {{ classroom.code }}</p>
+                            <p v-if="classroom.building">{{ t('Building') }}: {{ classroom.building }}</p>
+                            <p v-if="classroom.floor">{{ t('Floor') }}: {{ classroom.floor }}</p>
                         </div>
                     </CardContent>
                 </Card>

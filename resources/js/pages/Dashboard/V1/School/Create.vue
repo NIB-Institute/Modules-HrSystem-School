@@ -11,13 +11,15 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import { ChevronLeft } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { SchoolFormData, SchoolCreateProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<SchoolCreateProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Schools', href: '/dashboard/schools' },
-    { title: 'Create', href: '/dashboard/schools/create' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Schools'), href: '/dashboard/schools' },
+    { title: t('Create'), href: '/dashboard/schools/create' },
 ];
 
 const form = useForm<SchoolFormData>({
@@ -83,7 +85,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.post('/dashboard/schools', {
             onSuccess: () => {
-                toast.success('School created successfully.');
+                toast.success(t('School created successfully.'));
                 router.visit('/dashboard/schools');
             },
         });
@@ -93,7 +95,7 @@ const handleSubmit = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Create School" />
+        <Head :title="t('Create School')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Header -->
@@ -102,8 +104,8 @@ const handleSubmit = () => {
                     <ChevronLeft class="h-5 w-5" />
                 </Link>
                 <div>
-                    <h1 class="text-xl font-semibold">Create School</h1>
-                    <p class="text-sm text-muted-foreground">Add a new school or institution</p>
+                    <h1 class="text-xl font-semibold">{{ t('Create School') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ t('Add a new school or institution') }}</p>
                 </div>
             </div>
 
@@ -118,10 +120,10 @@ const handleSubmit = () => {
                 <!-- Actions at Bottom -->
                 <div class="flex justify-end gap-3 pt-4">
                     <Button type="button" variant="outline" as-child>
-                        <Link href="/dashboard/schools">Cancel</Link>
+                        <Link href="/dashboard/schools">{{ t('Cancel') }}</Link>
                     </Button>
                     <Button type="submit" :disabled="isFormInvalid || form.processing">
-                        {{ form.processing ? 'Creating...' : 'Create School' }}
+                        {{ form.processing ? t('Creating...') : t('Create School') }}
                     </Button>
                 </div>
             </form>

@@ -8,8 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AlertTriangle, BookOpen } from 'lucide-vue-next';
 import type { CourseDeleteProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<CourseDeleteProps>();
+const { t } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -38,7 +40,7 @@ const canSubmit = computed(() => confirmed.value === true);
 const handleSubmit = () => {
     form.delete(`/dashboard/courses/${props.course.uuid}`, {
         onSuccess: () => {
-            toast.success('Course deleted successfully.');
+            toast.success(t('Course deleted successfully.'));
             setTimeout(() => {
                 close();
                 redirect();
@@ -56,11 +58,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Delete Course"
-        description="This action cannot be undone"
+        :title="t('Delete Course')"
+        :description="t('This action cannot be undone')"
         mode="delete"
         size="md"
-        submit-text="Delete Course"
+        :submit-text="t('Delete Course')"
         :loading="form.processing"
         :disabled="!canSubmit"
         @submit="handleSubmit"
@@ -85,13 +87,13 @@ const handleCancel = () => {
                 <AlertTriangle class="mt-0.5 h-5 w-5 text-destructive" />
                 <div class="space-y-1">
                     <p class="text-sm font-medium text-destructive">
-                        You are about to delete this course
+                        {{ t('You are about to delete this course') }}
                     </p>
                     <p class="text-sm text-muted-foreground">
-                        <strong>{{ course.name }}</strong> will be permanently removed from the system.
+                        <strong>{{ course.name }}</strong> {{ t('will be permanently removed from the system.') }}
                     </p>
                     <p v-if="course.current_enrollment && course.current_enrollment > 0" class="text-sm text-destructive">
-                        Warning: This course has <strong>{{ course.current_enrollment }}</strong> enrolled student(s).
+                        {{ t('Warning: This course has') }} <strong>{{ course.current_enrollment }}</strong> {{ t('enrolled student(s).') }}
                     </p>
                 </div>
             </div>
@@ -104,10 +106,10 @@ const handleCancel = () => {
                 />
                 <div class="space-y-1">
                     <Label for="confirmed" class="cursor-pointer font-medium">
-                        I confirm this deletion
+                        {{ t('I confirm this deletion') }}
                     </Label>
                     <p class="text-sm text-muted-foreground">
-                        I understand that this action cannot be undone.
+                        {{ t('I understand that this action cannot be undone.') }}
                     </p>
                 </div>
             </div>

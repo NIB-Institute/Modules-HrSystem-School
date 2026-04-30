@@ -20,12 +20,14 @@ import {
 } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { CourseShowProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<CourseShowProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Courses', href: '/dashboard/courses' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Courses'), href: '/dashboard/courses' },
     { title: props.course.name, href: `/dashboard/courses/${props.course.uuid}` },
 ];
 
@@ -57,12 +59,12 @@ const handleDelete = () => {
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-semibold">{{ course.name }}</h1>
                                 <Badge :variant="course.status ? 'default' : 'secondary'">
-                                    {{ course.status ? 'Active' : 'Inactive' }}
+                                    {{ course.status ? t('Active') : t('Inactive') }}
                                 </Badge>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Badge variant="outline">{{ course.type_label }}</Badge>
-                                <span v-if="course.code">Code: {{ course.code }}</span>
+                                <span v-if="course.code">{{ t('Code') }}: {{ course.code }}</span>
                             </div>
                         </div>
                     </div>
@@ -70,11 +72,11 @@ const handleDelete = () => {
                 <div class="flex items-center gap-2">
                     <Button variant="outline" @click="handleEdit">
                         <Pencil class="mr-2 h-4 w-4" />
-                        Edit
+                        {{ t('Edit') }}
                     </Button>
                     <Button variant="destructive" @click="handleDelete">
                         <Trash2 class="mr-2 h-4 w-4" />
-                        Delete
+                        {{ t('Delete') }}
                     </Button>
                 </div>
             </div>
@@ -82,22 +84,22 @@ const handleDelete = () => {
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-4">
                 <StatsCard
-                    title="Credits"
+                    :title="t('Credits')"
                     :value="stats.credits"
                     :icon="BookOpen"
                 />
                 <StatsCard
-                    title="Max Students"
+                    :title="t('Max Students')"
                     :value="stats.max_students"
                     :icon="Users"
                 />
                 <StatsCard
-                    title="Current Enrollment"
+                    :title="t('Current Enrollment')"
                     :value="stats.current_enrollment"
                     :icon="GraduationCap"
                 />
                 <StatsCard
-                    title="Available Seats"
+                    :title="t('Available Seats')"
                     :value="stats.available_seats"
                     :icon="Users"
                     :variant="stats.available_seats > 0 ? 'success' : 'warning'"
@@ -111,7 +113,7 @@ const handleDelete = () => {
                     <!-- Description -->
                     <Card v-if="course.description">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">About</CardTitle>
+                            <CardTitle class="text-base">{{ t('About') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p class="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -123,7 +125,7 @@ const handleDelete = () => {
                     <!-- Syllabus -->
                     <Card v-if="course.syllabus">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Syllabus</CardTitle>
+                            <CardTitle class="text-base">{{ t('Syllabus') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p class="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -135,7 +137,7 @@ const handleDelete = () => {
                     <!-- Prerequisites -->
                     <Card v-if="course.prerequisites && course.prerequisites.length > 0">
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Prerequisites</CardTitle>
+                            <CardTitle class="text-base">{{ t('Prerequisites') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div class="flex flex-wrap gap-2">
@@ -152,52 +154,52 @@ const handleDelete = () => {
                     <!-- Course Details -->
                     <Card>
                         <CardHeader class="pb-3">
-                            <CardTitle class="text-base">Details</CardTitle>
+                            <CardTitle class="text-base">{{ t('Details') }}</CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
                             <div v-if="course.department_name" class="flex items-center gap-3">
                                 <Building2 class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Department</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Department') }}</p>
                                     <p class="text-sm font-medium">{{ course.department_name }}</p>
                                 </div>
                             </div>
                             <div v-if="course.program_name" class="flex items-center gap-3">
                                 <GraduationCap class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Program</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Program') }}</p>
                                     <p class="text-sm font-medium">{{ course.program_name }}</p>
                                 </div>
                             </div>
                             <div v-if="course.instructor_name" class="flex items-center gap-3">
                                 <User class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Instructor</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Instructor') }}</p>
                                     <p class="text-sm font-medium">{{ course.instructor_name }}</p>
                                 </div>
                             </div>
                             <div v-if="course.semester || course.year" class="flex items-center gap-3">
                                 <Calendar class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Semester / Year</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Semester / Year') }}</p>
                                     <p class="text-sm font-medium">
-                                        {{ course.semester ? `Semester ${course.semester}` : '' }}
+                                        {{ course.semester ? `${t('Semester')} ${course.semester}` : '' }}
                                         {{ course.semester && course.year ? ' / ' : '' }}
-                                        {{ course.year ? `Year ${course.year}` : '' }}
+                                        {{ course.year ? `${t('Year')} ${course.year}` : '' }}
                                     </p>
                                 </div>
                             </div>
                             <div v-if="course.schedule" class="flex items-center gap-3">
                                 <Clock class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Schedule</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Schedule') }}</p>
                                     <p class="text-sm font-medium">{{ course.schedule }}</p>
                                 </div>
                             </div>
                             <div v-if="course.room" class="flex items-center gap-3">
                                 <MapPin class="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Room</p>
+                                    <p class="text-xs text-muted-foreground">{{ t('Room') }}</p>
                                     <p class="text-sm font-medium">{{ course.room }}</p>
                                 </div>
                             </div>

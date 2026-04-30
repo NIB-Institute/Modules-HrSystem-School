@@ -8,8 +8,10 @@ import { toast } from 'vue-sonner';
 import { classroomSchema } from '@school/validation/classroomSchema';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { ClassroomFormData, ClassroomEditProps, ClassroomType } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<ClassroomEditProps>();
+const { t } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -72,7 +74,7 @@ const handleSubmit = () => {
     validateAndSubmit(getFormData(), form, () => {
         form.put(`/dashboard/classrooms/${props.classroom.uuid}`, {
             onSuccess: () => {
-                toast.success('Classroom updated successfully.');
+                toast.success(t('Classroom updated successfully.'));
                 setTimeout(() => {
                     close();
                     redirect();
@@ -92,11 +94,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Edit Classroom"
-        :description="`Editing: ${classroom.name}`"
+        :title="t('Edit Classroom')"
+        :description="t('Editing: :name', { name: classroom.name })"
         mode="edit"
         size="lg"
-        submit-text="Save Changes"
+        :submit-text="t('Save Changes')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"
