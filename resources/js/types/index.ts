@@ -730,9 +730,20 @@ export interface Inventory {
     classroom_id: number | null;
     department_id: number | null;
     assigned_to_user_id: number | null;
-    equipment?: { id: number; name: string };
+    equipment?: {
+        id: number;
+        name: string;
+        category: string;
+        category_label: string;
+    };
     classroom?: { id: number; name: string } | null;
-    department?: { id: number; name: string } | null;
+    department?: {
+        id: number;
+        name: string;
+        phone: string | null;
+        email: string | null;
+        school_name: string | null;
+    } | null;
     assigned_to?: { id: number; name: string; email: string } | null;
     created_at: string;
     updated_at: string;

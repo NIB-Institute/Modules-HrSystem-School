@@ -16,6 +16,7 @@ class SchoolDatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             ProgramSeeder::class,
             CourseSeeder::class,
+            EquipmentSeeder::class,
         ]);
     }
 }

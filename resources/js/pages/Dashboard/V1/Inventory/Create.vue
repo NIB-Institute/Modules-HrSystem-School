@@ -68,7 +68,7 @@ const handleCancel = () => {
         :title="__('Add Inventory Item')"
         :description="__('Add a new physical asset to inventory')"
         mode="create"
-        size="lg"
+        size="xl"
         :submit-text="__('Add Item')"
         :loading="form.processing"
         :disabled="isFormInvalid"

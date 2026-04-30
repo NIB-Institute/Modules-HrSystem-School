@@ -58,6 +58,7 @@ const statusVariant = (status: InventoryStatus): 'default' | 'secondary' | 'dest
 };
 
 const columns: TableColumn<Inventory>[] = [
+    { key: 'image', label: __('Image'), render: (i) => i.images?.[0] || '—', sortable: false },
     { key: 'asset_tag', label: __('Asset Tag'), render: (i) => i.asset_tag },
     { key: 'name', label: __('Name'), render: (i) => i.name || i.equipment?.name || '—' },
     { key: 'equipment', label: __('Equipment'), render: (i) => i.equipment?.name ?? '—' },
@@ -66,8 +67,8 @@ const columns: TableColumn<Inventory>[] = [
         label: __('Location'),
         render: (i) => i.classroom?.name || i.department?.name || (i.assigned_to ? `${ __('Assigned')}: ${i.assigned_to.name}` : '—'),
     },
-    { key: 'status', label: __('Status'), render: (i) => i.status_label },
-    { key: 'condition', label: __('Condition'), render: (i) => i.condition_label },
+    { key: 'status', label: __('Status'), render: (i) => __(i.status_label) },
+    { key: 'condition', label: __('Condition'), render: (i) => __(i.condition_label) },
 ];
 
 const actions: TableAction<Inventory>[] = [
@@ -134,11 +135,11 @@ const handleImport = () => router.visit('/dashboard/inventories/import');
 const handleTrash = () => router.visit('/dashboard/inventories/trash');
 
 const statusOptions = computed(() =>
-    Object.entries(props.statuses).map(([value, label]) => ({ value, label })),
+    Object.entries(props.statuses).map(([value, label]) => ({ value, label: __(label as string) })),
 );
 
 const conditionOptions = computed(() =>
-    Object.entries(props.conditions).map(([value, label]) => ({ value, label })),
+    Object.entries(props.conditions).map(([value, label]) => ({ value, label: __(label as string) })),
 );
 </script>
 
@@ -248,7 +249,17 @@ const conditionOptions = computed(() =>
                     @per-page-change="handlePerPageChange"
                 >
                     <template #cell-status="{ item }">
-                        <Badge :variant="statusVariant(item.status)">{{ item.status_label }}</Badge>
+                        <Badge :variant="statusVariant(item.status)">{{ __(item.status_label) }}</Badge>
+                    </template>
+
+                    <template #cell-image="{ item }">
+                        <img
+                            v-if="item.images?.[0]"
+                            :src="item.images[0]"
+                            :alt="item.asset_tag"
+                            class="h-10 w-10 rounded object-cover"
+                        />
+                        <div v-else class="h-10 w-10 rounded bg-muted" />
                     </template>
 
                     <template #bulk-actions>

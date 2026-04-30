@@ -5,6 +5,7 @@ namespace Modules\School\Http\Resources\Dashboard\V1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\School\Models\Inventory;
+use Modules\School\Models\Equipment;
 
 class InventoryResource extends JsonResource
 {
@@ -37,6 +38,8 @@ class InventoryResource extends JsonResource
             'equipment' => $this->whenLoaded('equipment', fn () => [
                 'id' => $this->equipment->id,
                 'name' => $this->equipment->name,
+                'category' => $this->equipment->category,
+                'category_label' => Equipment::getCategories()[$this->equipment->category] ?? ucfirst((string) $this->equipment->category),
             ]),
             'classroom' => $this->whenLoaded('classroom', fn () => $this->classroom ? [
                 'id' => $this->classroom->id,
@@ -45,6 +48,9 @@ class InventoryResource extends JsonResource
             'department' => $this->whenLoaded('department', fn () => $this->department ? [
                 'id' => $this->department->id,
                 'name' => $this->department->name,
+                'phone' => $this->department->phone,
+                'email' => $this->department->email,
+                'school_name' => $this->department->school?->name,
             ] : null),
             'assigned_to' => $this->whenLoaded('assignedTo', fn () => $this->assignedTo ? [
                 'id' => $this->assignedTo->id,
