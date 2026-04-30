@@ -5,9 +5,11 @@ import { useForm } from '@inertiajs/vue3';
 import { useModal } from 'momentum-modal';
 import { computed } from 'vue';
 import { toast } from 'vue-sonner';
-import type { InventoryEditProps, InventoryFormData } from '@school/types';
+import type { InventoryFormData, InventoryEditProps } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<InventoryEditProps>();
+const { t } = useTranslation();
 
 const { show, close, redirect } = useModal();
 
@@ -47,7 +49,7 @@ const isFormInvalid = computed(() => !form.asset_tag || !form.equipment_id);
 const handleSubmit = () => {
     form.put(`/dashboard/inventories/${props.inventory.uuid}`, {
         onSuccess: () => {
-            toast.success('Inventory item updated successfully.');
+            toast.success(t('Item updated successfully.'));
             setTimeout(() => {
                 close();
                 redirect();
@@ -65,11 +67,11 @@ const handleCancel = () => {
 <template>
     <ModalForm
         v-model:open="isOpen"
-        title="Edit Inventory Item"
-        :description="`Editing ${inventory.asset_tag}`"
+        :title="t('Edit Inventory Item')"
+        :description="t('Editing asset tag: :tag', { tag: inventory.asset_tag })"
         mode="edit"
         size="lg"
-        submit-text="Save Changes"
+        :submit-text="t('Save Changes')"
         :loading="form.processing"
         :disabled="isFormInvalid"
         @submit="handleSubmit"

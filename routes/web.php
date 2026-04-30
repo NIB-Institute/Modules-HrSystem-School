@@ -1,8 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\School\Http\Controllers\SchoolController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('schools', SchoolController::class)->names('school');
-});
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::resource('schools', \Modules\School\Http\Controllers\SchoolController::class)->names('school');
+// });

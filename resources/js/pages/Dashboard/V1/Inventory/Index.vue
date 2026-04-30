@@ -21,12 +21,14 @@ import {
 } from 'lucide-vue-next';
 import type { BreadcrumbItem } from '@/types';
 import type { InventoryIndexProps, Inventory, InventoryStatus } from '@school/types';
+import { useTranslation } from '@/composables/useTranslation';
 
 const props = defineProps<InventoryIndexProps>();
+const { t } = useTranslation();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Inventory', href: '/dashboard/inventories' },
+    { title: t('Dashboard'), href: '/dashboard' },
+    { title: t('Inventory'), href: '/dashboard/inventories' },
 ];
 
 const search = ref(props.filters.search || '');
@@ -56,31 +58,31 @@ const statusVariant = (status: InventoryStatus): 'default' | 'secondary' | 'dest
 };
 
 const columns: TableColumn<Inventory>[] = [
-    { key: 'asset_tag', label: 'Asset Tag', render: (i) => i.asset_tag },
-    { key: 'name', label: 'Name', render: (i) => i.name || i.equipment?.name || '—' },
-    { key: 'equipment', label: 'Equipment', render: (i) => i.equipment?.name ?? '—' },
+    { key: 'asset_tag', label: t('Asset Tag'), render: (i) => i.asset_tag },
+    { key: 'name', label: t('Name'), render: (i) => i.name || i.equipment?.name || '—' },
+    { key: 'equipment', label: t('Equipment'), render: (i) => i.equipment?.name ?? '—' },
     {
         key: 'location',
-        label: 'Location',
-        render: (i) => i.classroom?.name || i.department?.name || (i.assigned_to ? `Assigned: ${i.assigned_to.name}` : '—'),
+        label: t('Location'),
+        render: (i) => i.classroom?.name || i.department?.name || (i.assigned_to ? `${t('Assigned')}: ${i.assigned_to.name}` : '—'),
     },
-    { key: 'status', label: 'Status', render: (i) => i.status_label },
-    { key: 'condition', label: 'Condition', render: (i) => i.condition_label },
+    { key: 'status', label: t('Status'), render: (i) => i.status_label },
+    { key: 'condition', label: t('Condition'), render: (i) => i.condition_label },
 ];
 
 const actions: TableAction<Inventory>[] = [
     {
-        label: 'View',
+        label: t('View'),
         icon: Eye,
         onClick: (i) => router.visit(`/dashboard/inventories/${i.uuid}`),
     },
     {
-        label: 'Edit',
+        label: t('Edit'),
         icon: Pencil,
         onClick: (i) => router.visit(`/dashboard/inventories/${i.uuid}/edit`),
     },
     {
-        label: 'Delete',
+        label: t('Delete'),
         icon: Trash2,
         onClick: (i) => router.visit(`/dashboard/inventories/${i.uuid}/delete`),
         variant: 'destructive',
@@ -142,50 +144,50 @@ const conditionOptions = computed(() =>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Inventory" />
+        <Head :title="t('Inventory')" />
 
         <div class="flex h-full flex-1 flex-col gap-6 p-6">
             <!-- Stats -->
             <div class="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
-                <StatsCard title="Total" :value="props.stats.total" :icon="Package" />
-                <StatsCard title="In Stock" :value="props.stats.in_stock" :icon="Package" variant="success" />
-                <StatsCard title="In Use" :value="props.stats.in_use" :icon="CheckCircle" variant="success" />
-                <StatsCard title="Maintenance" :value="props.stats.maintenance" :icon="Wrench" />
-                <StatsCard title="Retired" :value="props.stats.retired" :icon="Ban" />
-                <StatsCard title="Lost" :value="props.stats.lost" :icon="AlertTriangle" variant="destructive" />
+                <StatsCard :title="t('Total')" :value="props.stats.total" :icon="Package" />
+                <StatsCard :title="t('In Stock')" :value="props.stats.in_stock" :icon="Package" variant="success" />
+                <StatsCard :title="t('In Use')" :value="props.stats.in_use" :icon="CheckCircle" variant="success" />
+                <StatsCard :title="t('Maintenance')" :value="props.stats.maintenance" :icon="Wrench" />
+                <StatsCard :title="t('Retired')" :value="props.stats.retired" :icon="Ban" />
+                <StatsCard :title="t('Lost')" :value="props.stats.lost" :icon="AlertTriangle" variant="destructive" />
             </div>
 
             <!-- Main -->
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-semibold">Inventory</h2>
-                        <p class="text-sm text-muted-foreground">Track individual physical assets across the school.</p>
+                        <h2 class="text-lg font-semibold">{{ t('Inventory') }}</h2>
+                        <p class="text-sm text-muted-foreground">{{ t('Track individual physical assets across the school.') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <ButtonGroup>
                             <Button variant="default">
                                 <Database class="mr-2 h-4 w-4" />
-                                All
+                                {{ t('All') }}
                             </Button>
                             <Button variant="outline" @click="handleTrash">
                                 <Trash2 class="mr-2 h-4 w-4" />
-                                Trash
+                                {{ t('Trash') }}
                             </Button>
                         </ButtonGroup>
                         <ButtonGroup>
                             <Button variant="outline" @click="handleExport">
-                                <Download class="mr-2 h-4 w-4" /> Export
+                                <Download class="mr-2 h-4 w-4" /> {{ t('Export') }}
                             </Button>
                             <Button variant="outline" @click="handleImport">
-                                <Upload class="mr-2 h-4 w-4" /> Import
+                                <Upload class="mr-2 h-4 w-4" /> {{ t('Import') }}
                             </Button>
                             <Button variant="outline" @click="handleDownloadTemplate">
-                                <FileSpreadsheet class="mr-2 h-4 w-4" /> Template
+                                <FileSpreadsheet class="mr-2 h-4 w-4" /> {{ t('Template') }}
                             </Button>
                         </ButtonGroup>
                         <Button @click="handleCreate">
-                            <Plus class="mr-2 h-4 w-4" /> Add Item
+                            <Plus class="mr-2 h-4 w-4" /> {{ t('Add Item') }}
                         </Button>
                     </div>
                 </div>
@@ -196,16 +198,16 @@ const conditionOptions = computed(() =>
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             v-model="search"
-                            placeholder="Search by tag / serial / name..."
+                            :placeholder="t('Search by tag / serial / name...')"
                             class="pl-9"
                             @keyup.enter="handleSearch"
                         />
                     </div>
 
                     <Select v-model="statusFilter">
-                        <SelectTrigger class="w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
+                        <SelectTrigger class="w-[160px]"><SelectValue :placeholder="t('Status')" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All statuses</SelectItem>
+                            <SelectItem value="all">{{ t('All statuses') }}</SelectItem>
                             <SelectItem v-for="opt in statusOptions" :key="opt.value" :value="opt.value">
                                 {{ opt.label }}
                             </SelectItem>
@@ -213,9 +215,9 @@ const conditionOptions = computed(() =>
                     </Select>
 
                     <Select v-model="conditionFilter">
-                        <SelectTrigger class="w-[160px]"><SelectValue placeholder="Condition" /></SelectTrigger>
+                        <SelectTrigger class="w-[160px]"><SelectValue :placeholder="t('Condition')" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All conditions</SelectItem>
+                            <SelectItem value="all">{{ t('All conditions') }}</SelectItem>
                             <SelectItem v-for="opt in conditionOptions" :key="opt.value" :value="opt.value">
                                 {{ opt.label }}
                             </SelectItem>
@@ -223,9 +225,9 @@ const conditionOptions = computed(() =>
                     </Select>
 
                     <Select v-model="equipmentFilter">
-                        <SelectTrigger class="w-[180px]"><SelectValue placeholder="Equipment" /></SelectTrigger>
+                        <SelectTrigger class="w-[180px]"><SelectValue :placeholder="t('Equipment')" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All equipment</SelectItem>
+                            <SelectItem value="all">{{ t('All equipment') }}</SelectItem>
                             <SelectItem v-for="e in props.equipment" :key="e.id" :value="String(e.id)">
                                 {{ e.name }}
                             </SelectItem>
@@ -241,6 +243,7 @@ const conditionOptions = computed(() =>
                     :pagination="pagination"
                     v-model:selected-rows="selectedUuids"
                     row-key="uuid"
+                    :searchable="false"
                     @page-change="handlePageChange"
                     @per-page-change="handlePerPageChange"
                 >
@@ -256,7 +259,7 @@ const conditionOptions = computed(() =>
                             @click="openBulkDeleteDialog"
                         >
                             <Trash2 class="mr-2 h-4 w-4" />
-                            Delete {{ selectedUuids.length }}
+                            {{ t('Delete :count', { count: selectedUuids.length }) }}
                         </Button>
                     </template>
                 </TableReusable>
