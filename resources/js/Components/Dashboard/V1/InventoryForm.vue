@@ -275,7 +275,6 @@ if (props.mode === 'create') {
                             <SelectValue :placeholder="model.department_id ? __('Select classroom') : __('Pick a department first')" />
                         </SelectTrigger>
                         <SelectContent class="z-[9999]">
-                            <SelectItem :value="NONE">{{ __('None / Floating') }}</SelectItem>
                             <SelectItem v-for="c in filteredClassrooms" :key="c.id" :value="String(c.id)">
                                 {{ c.name }}
                             </SelectItem>
