@@ -264,7 +264,12 @@ if (props.mode === 'create') {
                 </div>
 
                 <div class="space-y-2">
-                    <Label class="text-[11px] font-bold uppercase text-muted-foreground/70">{{ __('Classroom') }}</Label>
+                    <Label class="flex items-center gap-2 text-[11px] font-bold uppercase text-muted-foreground/70">
+                        <span>{{ __('Classroom') }}</span>
+                        <span v-if="model.department_id" class="font-normal normal-case text-[10px] text-muted-foreground/60">
+                            ({{ filteredClassrooms.length }} {{ __('available') }})
+                        </span>
+                    </Label>
                     <Select v-model="classroomModel" :disabled="!model.department_id">
                         <SelectTrigger class="focus:ring-primary/40 border-muted-foreground/20 bg-background">
                             <SelectValue :placeholder="model.department_id ? __('Select classroom') : __('Pick a department first')" />

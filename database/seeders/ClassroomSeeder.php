@@ -20,9 +20,12 @@ class ClassroomSeeder extends Seeder
             return;
         }
 
+        $departmentByName = $departments->keyBy('name');
+
         $classrooms = [
-            // Lecture Halls
+            // Lecture Halls — Business Administration owns the big halls.
             [
+                'department' => 'Business Administration',
                 'name' => 'Main Lecture Hall A',
                 'code' => 'LH-A01',
                 'building' => 'Main Building',
@@ -38,6 +41,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'Business Administration',
                 'name' => 'Main Lecture Hall B',
                 'code' => 'LH-B01',
                 'building' => 'Main Building',
@@ -53,8 +57,9 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
 
-            // Regular Classrooms
+            // Regular Classrooms — split between CS and English Language.
             [
+                'department' => 'Computer Science',
                 'name' => 'Room 101',
                 'code' => 'RM-101',
                 'building' => 'Academic Block A',
@@ -70,6 +75,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'Computer Science',
                 'name' => 'Room 102',
                 'code' => 'RM-102',
                 'building' => 'Academic Block A',
@@ -85,6 +91,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'English Language',
                 'name' => 'Room 201',
                 'code' => 'RM-201',
                 'building' => 'Academic Block A',
@@ -100,6 +107,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'English Language',
                 'name' => 'Room 202',
                 'code' => 'RM-202',
                 'building' => 'Academic Block A',
@@ -115,8 +123,9 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
 
-            // Computer Labs
+            // Computer Labs — Computer Science.
             [
+                'department' => 'Computer Science',
                 'name' => 'Computer Lab 1',
                 'code' => 'CL-01',
                 'building' => 'Technology Center',
@@ -132,6 +141,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'Computer Science',
                 'name' => 'Computer Lab 2',
                 'code' => 'CL-02',
                 'building' => 'Technology Center',
@@ -147,6 +157,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'Mathematics',
                 'name' => 'Science Lab',
                 'code' => 'SL-01',
                 'building' => 'Science Building',
@@ -162,6 +173,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'Mathematics',
                 'name' => 'Physics Lab',
                 'code' => 'PL-01',
                 'building' => 'Science Building',
@@ -177,8 +189,9 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
 
-            // Seminar Rooms
+            // Seminar Rooms — Business Administration.
             [
+                'department' => 'Business Administration',
                 'name' => 'Seminar Room 1',
                 'code' => 'SR-01',
                 'building' => 'Main Building',
@@ -194,6 +207,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'Business Administration',
                 'name' => 'Seminar Room 2',
                 'code' => 'SR-02',
                 'building' => 'Main Building',
@@ -209,8 +223,9 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
 
-            // Auditorium
+            // Auditorium — Business Administration.
             [
+                'department' => 'Business Administration',
                 'name' => 'Main Auditorium',
                 'code' => 'AUD-01',
                 'building' => 'Auditorium Building',
@@ -226,8 +241,9 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
 
-            // Workshop
+            // Workshop — Engineering and English (Art Studio).
             [
+                'department' => 'Engineering',
                 'name' => 'Engineering Workshop',
                 'code' => 'WS-01',
                 'building' => 'Engineering Block',
@@ -243,6 +259,7 @@ class ClassroomSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'department' => 'English Language',
                 'name' => 'Art Studio',
                 'code' => 'AS-01',
                 'building' => 'Arts Building',
@@ -259,16 +276,29 @@ class ClassroomSeeder extends Seeder
             ],
         ];
 
+        $created = 0;
         foreach ($classrooms as $classroomData) {
-            // Assign to a random department
-            $department = $departments->random();
+            $deptName = $classroomData['department'];
+            unset($classroomData['department']);
+
+            $department = $departmentByName->get($deptName);
+            if (! $department) {
+                $this->command->warn("Department '{$deptName}' not found, skipping classroom '{$classroomData['name']}'.");
+                continue;
+            }
+
+            // Idempotent: skip if a classroom with this code already exists.
+            if (Classroom::where('code', $classroomData['code'])->exists()) {
+                continue;
+            }
 
             Classroom::create([
                 ...$classroomData,
                 'department_id' => $department->id,
             ]);
+            $created++;
         }
 
-        $this->command->info('Created ' . count($classrooms) . ' classrooms.');
+        $this->command->info("Created {$created} classrooms.");
     }
 }

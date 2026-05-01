@@ -85,11 +85,7 @@ class DepartmentSeeder extends Seeder
         ];
 
         foreach ($schools as $school) {
-            // Each school gets 3-5 random departments
-            $numDepartments = rand(3, 5);
-            $selectedDepartments = collect($departmentTemplates)->random($numDepartments);
-
-            foreach ($selectedDepartments as $dept) {
+            foreach ($departmentTemplates as $dept) {
                 $code = $school->code . '-' . $dept['code'];
 
                 // Skip if department with this code already exists
