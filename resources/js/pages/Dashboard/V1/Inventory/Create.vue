@@ -24,7 +24,7 @@ const isOpen = computed({
 });
 
 const form = useForm<InventoryFormData>({
-    asset_tag: '',
+    asset_tag: props.suggested_asset_tag,
     serial_number: '',
     name: '',
     equipment_id: null,

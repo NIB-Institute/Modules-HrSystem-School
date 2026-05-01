@@ -3,6 +3,7 @@
 namespace Modules\School\Http\Controllers\Dashboard\V1;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,7 +20,9 @@ use Modules\School\Actions\Dashboard\V1\UpdateInventoryAction;
 use Modules\School\Http\Requests\Dashboard\V1\BulkDeleteInventoriesRequest;
 use Modules\School\Http\Requests\Dashboard\V1\InventoryRequest;
 use Modules\School\Http\Resources\Dashboard\V1\InventoryResource;
+use Modules\School\Models\Equipment;
 use Modules\School\Models\Inventory;
+use Modules\School\Services\InventoryTagGenerator;
 
 class InventoryController extends Controller
 {
@@ -129,5 +132,18 @@ class InventoryController extends Controller
         return redirect()
             ->route('school.inventories.index')
             ->with('success', $message);
+    }
+
+    public function generateTag(Request $request, InventoryTagGenerator $generator): JsonResponse
+    {
+        $source = trim((string) $request->input('source', ''));
+
+        if ($source === '' && $request->filled('equipment_id')) {
+            $source = (string) (Equipment::whereKey($request->input('equipment_id'))->value('name') ?? '');
+        }
+
+        return response()->json([
+            'asset_tag' => $generator->generate($source !== '' ? $source : null),
+        ]);
     }
 }

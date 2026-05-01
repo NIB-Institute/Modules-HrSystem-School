@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
+import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -42,13 +43,37 @@ interface Props {
     statuses: Record<InventoryStatus, string>;
     conditions: Record<InventoryCondition, string>;
     equipment: { id: number; name: string }[];
-    classrooms: { id: number; name: string }[];
+    classrooms: { id: number; name: string; department_id: number | null }[];
     departments: { id: number; name: string }[];
 }
 
 const props = withDefaults(defineProps<Props>(), { mode: 'create' });
 
 const model = defineModel<InertiaForm<InventoryFormData>>({ required: true });
+
+// Classrooms belong to a department. When a department is picked, only show
+// its classrooms; if no department is picked, show none (force the cascade).
+// Laravel may serialize unsigned bigint as either number or string depending on
+// driver/config — coerce both sides before comparing to be safe.
+const filteredClassrooms = computed(() => {
+    const deptId = model.value.department_id;
+    if (!deptId) return [];
+    const target = Number(deptId);
+    return props.classrooms.filter(c => Number(c.department_id) === target);
+});
+
+// If the user changes department and the current classroom no longer belongs to it,
+// clear the classroom selection.
+watch(() => model.value.department_id, (newDeptId) => {
+    if (!model.value.classroom_id) return;
+    const target = Number(newDeptId);
+    const stillValid = props.classrooms.some(
+        c => c.id === model.value.classroom_id && Number(c.department_id) === target,
+    );
+    if (!stillValid) {
+        model.value.classroom_id = null;
+    }
+});
 
 const isActive = computed({
     get: () => model.value.is_active,
@@ -84,25 +109,29 @@ const conditionModel = createSelectModel('condition');
 const classroomModel = createSelectModel('classroom_id');
 const departmentModel = createSelectModel('department_id');
 
-const generateAssetTag = (equipmentName: string | undefined): string => {
-    const prefix = (equipmentName ?? '')
-        .replace(/[^a-zA-Z]/g, '')
-        .slice(0, 3)
-        .toUpperCase()
-        .padEnd(3, 'X');
-    const suffix = String(Math.floor(1000 + Math.random() * 9000));
-    return `${prefix}-${suffix}`;
-};
-
-const regenerateAssetTag = () => {
-    const eq = props.equipment.find(e => e.id === model.value.equipment_id);
-    model.value.asset_tag = generateAssetTag(eq?.name);
+// Asset tag is generated server-side (see InventoryTagGenerator) so the prefix
+// rules and uniqueness check live in one place. The form fetches a fresh tag
+// when the equipment changes or the user clicks the refresh button. Display
+// Name wins as the prefix source when set; falls back to the equipment name
+// (resolved by the backend from equipment_id).
+const regenerateAssetTag = async () => {
+    const source = (model.value.name ?? '').trim();
+    try {
+        const { data } = await axios.get('/dashboard/inventories/generate-tag', {
+            params: {
+                source: source || undefined,
+                equipment_id: model.value.equipment_id ?? undefined,
+            },
+        });
+        if (data?.asset_tag) {
+            model.value.asset_tag = data.asset_tag;
+        }
+    } catch {
+        // Silently ignore — user can retry via the refresh button.
+    }
 };
 
 if (props.mode === 'create') {
-    if (!model.value.asset_tag) {
-        regenerateAssetTag();
-    }
     watch(() => model.value.equipment_id, () => {
         regenerateAssetTag();
     });
@@ -220,22 +249,7 @@ if (props.mode === 'create') {
             
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 px-1">
                 <div class="space-y-2">
-                    <Label class="text-[11px] font-bold uppercase text-muted-foreground/70">{{ __('Classroom Location') }}</Label>
-                    <Select v-model="classroomModel">
-                        <SelectTrigger class="focus:ring-primary/40 border-muted-foreground/20 bg-background">
-                            <SelectValue :placeholder="__('Select classroom')" />
-                        </SelectTrigger>
-                        <SelectContent class="z-[9999]">
-                            <SelectItem :value="NONE">{{ __('None / Floating') }}</SelectItem>
-                            <SelectItem v-for="c in classrooms" :key="c.id" :value="String(c.id)">
-                                {{ c.name }}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div class="space-y-2">
-                    <Label class="text-[11px] font-bold uppercase text-muted-foreground/70">{{ __('Departmental Ownership') }}</Label>
+                    <Label class="text-[11px] font-bold uppercase text-muted-foreground/70">{{ __('Department') }}</Label>
                     <Select v-model="departmentModel">
                         <SelectTrigger class="focus:ring-primary/40 border-muted-foreground/20 bg-background">
                             <SelectValue :placeholder="__('Select department')" />
@@ -245,6 +259,24 @@ if (props.mode === 'create') {
                             <SelectItem v-for="d in departments" :key="d.id" :value="String(d.id)">
                                 {{ d.name }}
                             </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div class="space-y-2">
+                    <Label class="text-[11px] font-bold uppercase text-muted-foreground/70">{{ __('Classroom') }}</Label>
+                    <Select v-model="classroomModel" :disabled="!model.department_id">
+                        <SelectTrigger class="focus:ring-primary/40 border-muted-foreground/20 bg-background">
+                            <SelectValue :placeholder="model.department_id ? __('Select classroom') : __('Pick a department first')" />
+                        </SelectTrigger>
+                        <SelectContent class="z-[9999]">
+                            <SelectItem :value="NONE">{{ __('None / Floating') }}</SelectItem>
+                            <SelectItem v-for="c in filteredClassrooms" :key="c.id" :value="String(c.id)">
+                                {{ c.name }}
+                            </SelectItem>
+                            <div v-if="model.department_id && filteredClassrooms.length === 0" class="px-2 py-1.5 text-xs text-muted-foreground">
+                                {{ __('No classrooms in this department') }}
+                            </div>
                         </SelectContent>
                     </Select>
                 </div>

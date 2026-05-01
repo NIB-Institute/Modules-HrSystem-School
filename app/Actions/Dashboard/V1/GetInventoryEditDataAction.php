@@ -13,11 +13,13 @@ class GetInventoryEditDataAction
     public function execute(Inventory $inventory): array
     {
         return [
-            'inventory' => (new InventoryResource($inventory))->resolve(),
-            'statuses' => Inventory::statuses(),
-            'conditions' => Inventory::conditions(),
-            'equipment' => Equipment::select('id', 'name')->orderBy('name')->get(),
-            'classrooms' => Classroom::select('id', 'name')->orderBy('name')->get(),
+            'inventory'     => (new InventoryResource($inventory))->resolve(),
+            'statuses'      => Inventory::statuses(),
+            'conditions'    => Inventory::conditions(),
+            'equipment'     => Equipment::select('id', 'name')->orderBy('name')->get(),
+            'classrooms'    => Classroom::select('id', 'name', 'department_id')
+                ->orderBy('name')
+                ->get(),
             'departments' => Department::select('id', 'name')->orderBy('name')->get(),
         ];
     }

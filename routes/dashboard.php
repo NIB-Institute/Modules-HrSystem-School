@@ -221,6 +221,7 @@ Route::middleware(['auth', 'verified', 'auto.permission'])->prefix('dashboard')-
     // Inventories
     Route::get('inventories/bulk-delete', [InventoryController::class, 'confirmBulkDelete'])->name('inventories.bulk-delete.confirm');
     Route::delete('inventories/bulk-delete', [InventoryController::class, 'bulkDelete'])->name('inventories.bulk-delete');
+    Route::get('inventories/generate-tag', [InventoryController::class, 'generateTag'])->name('inventories.generate-tag');
     Route::get('inventories/create', [InventoryController::class, 'create'])->name('inventories.create');
     Route::post('inventories', [InventoryController::class, 'store'])->name('inventories.store');
     Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');

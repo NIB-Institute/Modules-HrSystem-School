@@ -774,7 +774,7 @@ export interface InventoryIndexProps {
     statuses: Record<InventoryStatus, string>;
     conditions: Record<InventoryCondition, string>;
     equipment: { id: number; name: string }[];
-    classrooms: { id: number; name: string }[];
+    classrooms: { id: number; name: string; department_id: number | null }[];
     departments: { id: number; name: string }[];
 }
 
@@ -801,11 +801,13 @@ export interface InventoryFormReferenceData {
     statuses: Record<InventoryStatus, string>;
     conditions: Record<InventoryCondition, string>;
     equipment: { id: number; name: string }[];
-    classrooms: { id: number; name: string }[];
+    classrooms: { id: number; name: string; department_id: number | null }[];
     departments: { id: number; name: string }[];
 }
 
-export interface InventoryCreateProps extends InventoryFormReferenceData {}
+export interface InventoryCreateProps extends InventoryFormReferenceData {
+    suggested_asset_tag: string;
+}
 
 export interface InventoryEditProps extends InventoryFormReferenceData {
     inventory: Inventory;

@@ -46,12 +46,12 @@ class GetInventoryIndexDataAction
         $inventories = $query->latest()->paginate($perPage);
 
         $stats = [
-            'total' => Inventory::count(),
-            'in_stock' => Inventory::where('status', Inventory::STATUS_IN_STOCK)->count(),
-            'in_use' => Inventory::where('status', Inventory::STATUS_IN_USE)->count(),
+            'total'     => Inventory::count(),
+            'in_stock'  => Inventory::where('status', Inventory::STATUS_IN_STOCK)->count(),
+            'in_use'    => Inventory::where('status', Inventory::STATUS_IN_USE)->count(),
             'maintenance' => Inventory::where('status', Inventory::STATUS_MAINTENANCE)->count(),
-            'retired' => Inventory::where('status', Inventory::STATUS_RETIRED)->count(),
-            'lost' => Inventory::where('status', Inventory::STATUS_LOST)->count(),
+            'retired'   => Inventory::where('status', Inventory::STATUS_RETIRED)->count(),
+            'lost'      => Inventory::where('status', Inventory::STATUS_LOST)->count(),
         ];
 
         return [
@@ -59,17 +59,19 @@ class GetInventoryIndexDataAction
                 'data' => InventoryResource::collection($inventories)->resolve(),
                 'meta' => [
                     'current_page' => $inventories->currentPage(),
-                    'last_page' => $inventories->lastPage(),
-                    'per_page' => $inventories->perPage(),
-                    'total' => $inventories->total(),
+                    'last_page'    => $inventories->lastPage(),
+                    'per_page'     => $inventories->perPage(),
+                    'total'        => $inventories->total(),
                 ],
             ],
             'filters' => $filters,
-            'stats' => $stats,
-            'statuses' => Inventory::statuses(),
-            'conditions' => Inventory::conditions(),
-            'equipment' => Equipment::select('id', 'name')->orderBy('name')->get(),
-            'classrooms' => Classroom::select('id', 'name')->orderBy('name')->get(),
+            'stats'         => $stats,
+            'statuses'      => Inventory::statuses(),
+            'conditions'    => Inventory::conditions(),
+            'equipment'     => Equipment::select('id', 'name')->orderBy('name')->get(),
+            'classrooms'    => Classroom::select('id', 'name', 'department_id')
+                ->orderBy('name')
+                ->get(),
             'departments' => Department::select('id', 'name')->orderBy('name')->get(),
         ];
     }
