@@ -51,10 +51,6 @@ const props = withDefaults(defineProps<Props>(), { mode: 'create' });
 
 const model = defineModel<InertiaForm<InventoryFormData>>({ required: true });
 
-// Classrooms belong to a department. When a department is picked, only show
-// its classrooms; if no department is picked, show none (force the cascade).
-// Laravel may serialize unsigned bigint as either number or string depending on
-// driver/config — coerce both sides before comparing to be safe.
 const filteredClassrooms = computed(() => {
     const deptId = model.value.department_id;
     if (!deptId) return [];
@@ -62,8 +58,6 @@ const filteredClassrooms = computed(() => {
     return props.classrooms.filter(c => Number(c.department_id) === target);
 });
 
-// If the user changes department and the current classroom no longer belongs to it,
-// clear the classroom selection.
 watch(() => model.value.department_id, (newDeptId) => {
     if (!model.value.classroom_id) return;
     const target = Number(newDeptId);
@@ -80,8 +74,6 @@ const isActive = computed({
     set: (val: boolean) => { model.value.is_active = val; },
 });
 
-// reka-ui's <SelectItem> forbids `value=""` (reserved for "clear").
-// Use this sentinel for nullable selects (classroom, department).
 const NONE = '__none__';
 
 const createSelectModel = <K extends keyof InventoryFormData>(key: K) =>
@@ -109,11 +101,6 @@ const conditionModel = createSelectModel('condition');
 const classroomModel = createSelectModel('classroom_id');
 const departmentModel = createSelectModel('department_id');
 
-// Asset tag is generated server-side (see InventoryTagGenerator) so the prefix
-// rules and uniqueness check live in one place. The form fetches a fresh tag
-// when the equipment changes or the user clicks the refresh button. Display
-// Name wins as the prefix source when set; falls back to the equipment name
-// (resolved by the backend from equipment_id).
 const regenerateAssetTag = async () => {
     const source = (model.value.name ?? '').trim();
     try {
